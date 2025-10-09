@@ -18,7 +18,8 @@ interface LocationPickerProps {
   initialLng?: number;
 }
 
-export default function LocationPicker({ onLocationSelect, initialLat = 40.7128, initialLng = -74.0060 }: LocationPickerProps) {
+// Default to Baku, Azerbaijan coordinates
+export default function LocationPicker({ onLocationSelect, initialLat = 40.4093, initialLng = 49.8671 }: LocationPickerProps) {
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -119,21 +120,27 @@ export default function LocationPicker({ onLocationSelect, initialLat = 40.7128,
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <button
         type="button"
         onClick={handleUseCurrentLocation}
-        className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-semibold flex items-center justify-center gap-2"
       >
+        <span className="text-lg">📍</span>
         Cari Mövqeyi İstifadə Et
       </button>
-      <div ref={mapContainerRef} style={{ height: '400px', width: '100%' }} className="rounded-lg border border-gray-300" />
+      <div ref={mapContainerRef} style={{ height: '400px', width: '100%' }} className="rounded-xl border-2 border-gray-300 shadow-md" />
       {address && (
-        <p className="text-sm text-gray-600">
-          <strong>Seçilmiş:</strong> {address}
-        </p>
+        <div className="bg-white rounded-lg p-3 border-2 border-green-200">
+          <p className="text-sm text-gray-700">
+            <span className="font-bold text-green-700">✓ Seçilmiş:</span> {address}
+          </p>
+        </div>
       )}
-      <p className="text-xs text-gray-500">Məkan seçmək üçün xəritədə klikləyin</p>
+      <p className="text-xs text-gray-500 flex items-center gap-1">
+        <span>💡</span>
+        <span>Məkan seçmək üçün xəritədə klikləyin</span>
+      </p>
     </div>
   );
 }

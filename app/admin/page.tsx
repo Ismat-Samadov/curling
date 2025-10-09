@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useToast } from '@/hooks/useToast';
+import { AZERBAIJAN_REGIONS, BOARD_TYPES, CITY_COORDINATES } from '@/lib/regions';
 
 const LocationPicker = dynamic(() => import('@/components/LocationPicker'), { ssr: false });
 
@@ -17,14 +18,17 @@ export default function AdminPage() {
   const [step, setStep] = useState(1);
   const [uploading, setUploading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedRegion, setSelectedRegion] = useState('');
+  const [availableCities, setAvailableCities] = useState<string[]>([]);
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    latitude: 0,
-    longitude: 0,
+    latitude: 40.4093, // Baku default
+    longitude: 49.8671, // Baku default
     address: '',
     city: '',
-    country: '',
+    country: 'Azərbaycan',
     width: 0,
     height: 0,
     boardType: 'billboard',
@@ -184,6 +188,35 @@ export default function AdminPage() {
       toast.error('Şəkillər yüklənmədi');
     } finally {
       setUploading(false);
+    }
+  };
+
+  // Handle region selection
+  const handleRegionChange = (region: string) => {
+    setSelectedRegion(region);
+    const cities = AZERBAIJAN_REGIONS[region as keyof typeof AZERBAIJAN_REGIONS];
+    setAvailableCities(cities ? [...cities] : []);
+    setFormData(prev => ({
+      ...prev,
+      city: '', // Reset city when region changes
+    }));
+  };
+
+  // Handle city selection and update map coordinates
+  const handleCityChange = (city: string) => {
+    setFormData(prev => ({
+      ...prev,
+      city,
+    }));
+
+    // Update map coordinates if city has predefined coordinates
+    if (CITY_COORDINATES[city]) {
+      const coords = CITY_COORDINATES[city];
+      setFormData(prev => ({
+        ...prev,
+        latitude: coords.lat,
+        longitude: coords.lng,
+      }));
     }
   };
 
@@ -489,12 +522,18 @@ export default function AdminPage() {
                     onChange={(e) => setFormData({ ...formData, boardType: e.target.value })}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all bg-white"
                   >
-                    <option value="billboard">🔶 Bilbord</option>
-                    <option value="digital">📺 Rəqəmsal Ekran</option>
-                    <option value="poster">📋 Poster Lövhəsi</option>
-                    <option value="wallscape">🏢 Divar Lövhəsi</option>
-                    <option value="transit">🚌 Nəqliyyat Reklamı</option>
+                    <option value="">Növ seçin</option>
+                    {BOARD_TYPES.map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
                   </select>
+                  {formData.boardType && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      {BOARD_TYPES.find(t => t.value === formData.boardType)?.description}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -522,35 +561,68 @@ export default function AdminPage() {
               </div>
 
               <div className="space-y-5">
+                {/* Country (Fixed to Azerbaijan) */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">🌍 Ölkə *</label>
+                  <div className="w-full px-4 py-3 border-2 border-gray-200 bg-gray-50 rounded-xl text-gray-900 font-semibold">
+                    🇦🇿 Azərbaycan
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Hazırda yalnız Azərbaycan daxilində elanlar yerləşdirilə bilər</p>
+                </div>
+
+                {/* Region and City Selection */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">🏙️ Şəhər *</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">📍 Region *</label>
+                    <select
                       required
-                      value={formData.city}
-                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                      placeholder="məs., Bakı"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all"
-                    />
+                      value={selectedRegion}
+                      onChange={(e) => handleRegionChange(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all bg-white"
+                    >
+                      <option value="">Region seçin</option>
+                      {Object.keys(AZERBAIJAN_REGIONS).map((region) => (
+                        <option key={region} value={region}>
+                          {region}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">🌍 Ölkə *</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">🏙️ Şəhər *</label>
+                    <select
                       required
-                      value={formData.country}
-                      onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                      placeholder="məs., Azərbaycan"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all"
-                    />
+                      value={formData.city}
+                      onChange={(e) => handleCityChange(e.target.value)}
+                      disabled={!selectedRegion}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    >
+                      <option value="">
+                        {selectedRegion ? 'Şəhər seçin' : 'Əvvəlcə region seçin'}
+                      </option>
+                      {availableCities.map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
                 <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-5 rounded-xl border border-indigo-100">
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">📌 Xəritədə Ünvan *</label>
-                  <LocationPicker onLocationSelect={handleLocationSelect} />
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">📌 Xəritədə Dəqiq Ünvan *</label>
+                  <p className="text-xs text-gray-500 mb-3">
+                    {formData.city
+                      ? `${formData.city} şəhəri üçün xəritədə dəqiq məkanı seçin`
+                      : 'Əvvəlcə şəhər seçin, sonra xəritədə dəqiq məkanı göstərin'}
+                  </p>
+                  <LocationPicker
+                    onLocationSelect={handleLocationSelect}
+                    initialLat={formData.latitude}
+                    initialLng={formData.longitude}
+                    key={`${formData.latitude}-${formData.longitude}`}
+                  />
                   {formData.address && (
                     <div className="mt-3 bg-white rounded-lg p-3 border border-indigo-200">
                       <p className="text-sm text-gray-700">
