@@ -50,7 +50,9 @@ export default function AdminPanelPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'boards'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'analytics' | 'users' | 'boards'>('overview');
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [analyticsPeriod, setAnalyticsPeriod] = useState('30');
 
   const [stats, setStats] = useState<Stats>({
     totalUsers: 0,
@@ -123,6 +125,22 @@ export default function AdminPanelPage() {
       console.error('Error fetching boards:', error);
     }
   };
+
+  const fetchAnalytics = async (period: string = analyticsPeriod) => {
+    try {
+      const response = await fetch(`/api/admin/analytics?period=${period}`);
+      const data = await response.json();
+      setAnalytics(data.analytics);
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'analytics' && !analytics) {
+      fetchAnalytics();
+    }
+  }, [activeTab]);
 
   const handleToggleAdmin = async (userId: number, currentStatus: boolean) => {
     if (!confirm(`Bu istifadəçinin admin statusunu ${currentStatus ? 'ləğv' : 'təyin'} etmək istədiyinizə əminsiniz?`)) {
@@ -308,10 +326,10 @@ export default function AdminPanelPage() {
       {/* Tabs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 mb-6">
-          <div className="flex gap-2">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
             <button
               onClick={() => setActiveTab('overview')}
-              className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all ${
+              className={`px-4 py-3 rounded-xl font-semibold transition-all ${
                 activeTab === 'overview'
                   ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
                   : 'text-gray-700 hover:bg-gray-100'
@@ -320,8 +338,18 @@ export default function AdminPanelPage() {
               📊 Ümumi Baxış
             </button>
             <button
+              onClick={() => setActiveTab('analytics')}
+              className={`px-4 py-3 rounded-xl font-semibold transition-all ${
+                activeTab === 'analytics'
+                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              📈 Analitika
+            </button>
+            <button
               onClick={() => setActiveTab('users')}
-              className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all ${
+              className={`px-4 py-3 rounded-xl font-semibold transition-all ${
                 activeTab === 'users'
                   ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
                   : 'text-gray-700 hover:bg-gray-100'
@@ -331,7 +359,7 @@ export default function AdminPanelPage() {
             </button>
             <button
               onClick={() => setActiveTab('boards')}
-              className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all ${
+              className={`px-4 py-3 rounded-xl font-semibold transition-all ${
                 activeTab === 'boards'
                   ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
                   : 'text-gray-700 hover:bg-gray-100'
@@ -382,6 +410,229 @@ export default function AdminPanelPage() {
                 <p className="text-gray-500 text-sm mt-1">Bütün lövhələr</p>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Analytics Tab */}
+        {activeTab === 'analytics' && (
+          <div className="space-y-6">
+            {!analytics ? (
+              <div className="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-4 border-indigo-600 mb-4"></div>
+                <p className="text-gray-600">Analitika yüklənir...</p>
+              </div>
+            ) : (
+              <>
+                {/* Period Selector */}
+                <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <h3 className="text-xl font-bold text-gray-900">📈 Detallı Analitika</h3>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => { setAnalyticsPeriod('7'); fetchAnalytics('7'); }}
+                        className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                          analyticsPeriod === '7' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        7 Gün
+                      </button>
+                      <button
+                        onClick={() => { setAnalyticsPeriod('30'); fetchAnalytics('30'); }}
+                        className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                          analyticsPeriod === '30' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        30 Gün
+                      </button>
+                      <button
+                        onClick={() => { setAnalyticsPeriod('90'); fetchAnalytics('90'); }}
+                        className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                          analyticsPeriod === '90' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        90 Gün
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Summary Cards */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 shadow-lg border border-blue-100">
+                    <p className="text-sm font-semibold text-blue-600 mb-2">Yeni İstifadəçilər</p>
+                    <p className="text-4xl font-bold text-blue-700">{analytics.summary.newUsers}</p>
+                    <p className="text-sm text-blue-600 mt-1">Son {analyticsPeriod} gün</p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 shadow-lg border border-green-100">
+                    <p className="text-sm font-semibold text-green-600 mb-2">Yeni Elanlar</p>
+                    <p className="text-4xl font-bold text-green-700">{analytics.summary.newListings}</p>
+                    <p className="text-sm text-green-600 mt-1">Son {analyticsPeriod} gün</p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 shadow-lg border border-purple-100">
+                    <p className="text-sm font-semibold text-purple-600 mb-2">Baxışlar</p>
+                    <p className="text-4xl font-bold text-purple-700">{analytics.summary.viewsInPeriod}</p>
+                    <p className="text-sm text-purple-600 mt-1">Son {analyticsPeriod} gün</p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 shadow-lg border border-orange-100">
+                    <p className="text-sm font-semibold text-orange-600 mb-2">Dönüşüm</p>
+                    <p className="text-4xl font-bold text-orange-700">{analytics.summary.conversionRate}%</p>
+                    <p className="text-sm text-orange-600 mt-1">Telefon açılma</p>
+                  </div>
+                </div>
+
+                {/* Engagement Metrics */}
+                <div className="grid lg:grid-cols-2 gap-6">
+                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <span>👁️</span>
+                      Cəlbetmə Məlumatları
+                    </h4>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
+                        <span className="text-gray-700 font-medium">Toplam Baxış</span>
+                        <span className="text-2xl font-bold text-indigo-600">{analytics.summary.totalViews}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl">
+                        <span className="text-gray-700 font-medium">Telefon Açılmaları</span>
+                        <span className="text-2xl font-bold text-green-600">{analytics.summary.totalPhoneReveals}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
+                        <span className="text-gray-700 font-medium">İstifadəçi Aktivliyi</span>
+                        <span className="text-2xl font-bold text-blue-600">{analytics.summary.userEngagementRate}%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <span>💰</span>
+                      Gəlir Məlumatları
+                    </h4>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl">
+                        <span className="text-gray-700 font-medium">Günlük Gəlir</span>
+                        <span className="text-2xl font-bold text-green-600">{analytics.summary.totalDailyRevenue} ₼</span>
+                      </div>
+                      <div className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
+                        <span className="text-gray-700 font-medium">Aylıq Gəlir</span>
+                        <span className="text-2xl font-bold text-blue-600">{analytics.summary.totalMonthlyRevenue} ₼</span>
+                      </div>
+                      <div className="flex justify-between items-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
+                        <span className="text-gray-700 font-medium">Orta Qiymət</span>
+                        <span className="text-2xl font-bold text-purple-600">{analytics.summary.avgPricePerDay} ₼/gün</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Top Performing Listings */}
+                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                  <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span>🏆</span>
+                    Ən Yaxşı Performans Göstərən Elanlar
+                  </h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="text-left py-3 px-4 font-semibold text-gray-700">Elan</th>
+                          <th className="text-center py-3 px-4 font-semibold text-gray-700">Baxışlar</th>
+                          <th className="text-center py-3 px-4 font-semibold text-gray-700">Telefon</th>
+                          <th className="text-center py-3 px-4 font-semibold text-gray-700">Dönüşüm</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {analytics.engagement.topListings.slice(0, 5).map((listing: any) => (
+                          <tr key={listing.listingId} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="py-3 px-4 font-medium text-gray-900">{listing.title || `Elan #${listing.listingId}`}</td>
+                            <td className="py-3 px-4 text-center text-indigo-600 font-semibold">{listing.views}</td>
+                            <td className="py-3 px-4 text-center text-green-600 font-semibold">{listing.phoneReveals}</td>
+                            <td className="py-3 px-4 text-center text-purple-600 font-semibold">
+                              {listing.views > 0 ? ((listing.phoneReveals / listing.views) * 100).toFixed(1) : '0'}%
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Distribution Charts */}
+                <div className="grid lg:grid-cols-2 gap-6">
+                  {/* Listings by Type */}
+                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <span>📊</span>
+                      Elan Növləri üzrə Bölgü
+                    </h4>
+                    <div className="space-y-3">
+                      {analytics.distribution.listingsByType.map((item: any, idx: number) => (
+                        <div key={idx} className="flex items-center gap-3">
+                          <div className="flex-1">
+                            <div className="flex justify-between mb-1">
+                              <span className="text-sm font-medium text-gray-700">{item.type}</span>
+                              <span className="text-sm font-bold text-gray-900">{item.count}</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-gradient-to-r from-indigo-600 to-purple-600 h-2 rounded-full"
+                                style={{ width: `${(item.count / analytics.summary.totalListings) * 100}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Listings by City */}
+                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <span>📍</span>
+                      Şəhərlər üzrə Bölgü (Top 5)
+                    </h4>
+                    <div className="space-y-3">
+                      {analytics.distribution.listingsByCity.slice(0, 5).map((item: any, idx: number) => (
+                        <div key={idx} className="flex items-center gap-3">
+                          <div className="flex-1">
+                            <div className="flex justify-between mb-1">
+                              <span className="text-sm font-medium text-gray-700">{item.city}</span>
+                              <span className="text-sm font-bold text-gray-900">{item.count}</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-gradient-to-r from-green-600 to-emerald-600 h-2 rounded-full"
+                                style={{ width: `${(item.count / analytics.summary.totalListings) * 100}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Most Active Users */}
+                <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                  <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span>⭐</span>
+                    Ən Aktiv İstifadəçilər
+                  </h4>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {analytics.activity.mostActiveUsers.slice(0, 6).map((user: any, idx: number) => (
+                      <div key={idx} className="p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+                        <p className="font-bold text-gray-900 mb-1">{user.userName || 'Naməlum'}</p>
+                        <p className="text-sm text-gray-600 mb-2 truncate">{user.userEmail || '-'}</p>
+                        <p className="text-2xl font-bold text-indigo-600">{user.listingCount} <span className="text-sm text-gray-600">elan</span></p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 
