@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { useToast } from '@/hooks/useToast';
 
 const LocationPicker = dynamic(() => import('@/components/LocationPicker'), { ssr: false });
 
 export default function AdminPage() {
   const router = useRouter();
+  const toast = useToast();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -158,12 +160,13 @@ export default function AdminPage() {
           images: [...prev.images, ...data.urls],
           thumbnailImage: prev.thumbnailImage || data.urls[0],
         }));
+        toast.success('Şəkillər uğurla yükləndi');
       } else {
-        alert(`Şəkillər yüklənmədi: ${data.error || 'Naməlum xəta'}`);
+        toast.error(`Şəkillər yüklənmədi: ${data.error || 'Naməlum xəta'}`);
       }
     } catch (error) {
       console.error('Error uploading images:', error);
-      alert('Şəkillər yüklənmədi');
+      toast.error('Şəkillər yüklənmədi');
     } finally {
       setUploading(false);
     }
@@ -200,15 +203,17 @@ export default function AdminPage() {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Lövhə uğurla yerləşdirildi!');
-        window.location.href = `/boards/${data.board.id}`;
+        toast.success('Lövhə uğurla yerləşdirildi!');
+        setTimeout(() => {
+          window.location.href = `/boards/${data.board.id}`;
+        }, 1000);
       } else {
-        alert(data.error || 'Lövhə yerləşdirilmədi');
+        toast.error(data.error || 'Lövhə yerləşdirilmədi');
         setSubmitting(false);
       }
     } catch (error) {
       console.error('Error creating board:', error);
-      alert('Lövhə yerləşdirilmədi');
+      toast.error('Lövhə yerləşdirilmədi');
       setSubmitting(false);
     }
   };
@@ -218,9 +223,13 @@ export default function AdminPage() {
     router.push('/');
   };
 
+  const ToastContainer = toast.ToastContainer;
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+    <>
+      <ToastContainer />
+      <div className="min-h-screen bg-gray-50">
+        <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <Link href="/">
@@ -569,5 +578,6 @@ export default function AdminPage() {
         </form>
       </div>
     </div>
+    </>
   );
 }

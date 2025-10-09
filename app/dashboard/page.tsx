@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/useToast';
+import { useConfirm } from '@/hooks/useConfirm';
 
 const DEFAULT_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5SZWtsYW0gTMO2dmjJmXNpPC90ZXh0Pjwvc3ZnPg==';
 
@@ -33,6 +35,8 @@ interface BoardStats {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const toast = useToast();
+  const { confirm, ConfirmDialog } = useConfirm();
   const [user, setUser] = useState<any>(null);
   const [boards, setBoards] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,7 +91,15 @@ export default function DashboardPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Bu lövhəni silmək istədiyinizdən əminsiniz?')) {
+    const confirmed = await confirm({
+      title: 'Lövhəni Sil',
+      message: 'Bu lövhəni silmək istədiyinizdən əminsiniz? Bu əməliyyat geri qaytarıla bilməz.',
+      confirmText: 'Bəli, Sil',
+      cancelText: 'Xeyr',
+      type: 'danger',
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -100,13 +112,13 @@ export default function DashboardPage() {
 
       if (response.ok) {
         setBoards(boards.filter(b => b.id !== id));
-        alert('Lövhə uğurla silindi');
+        toast.success('Lövhə uğurla silindi');
       } else {
         const data = await response.json();
-        alert(data.error || 'Lövhə silinmədi');
+        toast.error(data.error || 'Lövhə silinmədi');
       }
     } catch (error) {
-      alert('Lövhə silinmədi');
+      toast.error('Lövhə silinmədi');
     } finally {
       setDeleting(null);
     }
@@ -129,9 +141,14 @@ export default function DashboardPage() {
     return null;
   }
 
+  const ToastContainer = toast.ToastContainer;
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+    <>
+      <ToastContainer />
+      <ConfirmDialog />
+      <div className="min-h-screen bg-gray-50">
+        <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <Link href="/">
@@ -264,5 +281,6 @@ export default function DashboardPage() {
         )}
       </div>
     </div>
+    </>
   );
 }
