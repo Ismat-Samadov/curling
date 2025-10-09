@@ -4,8 +4,8 @@ export async function POST() {
   try {
     const response = NextResponse.json({ success: true });
 
-    // Delete auth cookie
-    response.cookies.delete('user_id');
+    // Delete auth token cookie
+    response.cookies.delete('auth_token');
 
     return response;
   } catch (error) {

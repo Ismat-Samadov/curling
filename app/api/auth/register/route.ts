@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
-import { hashPassword } from '@/lib/auth';
+import { hashPassword, generateToken } from '@/lib/auth';
 import { eq } from 'drizzle-orm';
 
 export async function POST(request: NextRequest) {
@@ -50,6 +50,9 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
+    // Generate JWT token
+    const token = generateToken(newUser[0].id, newUser[0].email);
+
     // Create response with cookie
     const response = NextResponse.json({
       user: {
@@ -59,8 +62,8 @@ export async function POST(request: NextRequest) {
       },
     }, { status: 201 });
 
-    // Set auth cookie on response
-    response.cookies.set('user_id', newUser[0].id.toString(), {
+    // Set auth token cookie on response
+    response.cookies.set('auth_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
