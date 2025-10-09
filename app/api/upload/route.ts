@@ -13,9 +13,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log(`Uploading ${files.length} files...`);
+
     const uploadPromises = files.map(async (file) => {
+      console.log(`Uploading file: ${file.name}, size: ${file.size} bytes`);
       const key = generateImageKey('boards', file.name);
       const url = await uploadToR2(file, key);
+      console.log(`Uploaded to: ${url}`);
       return url;
     });
 
@@ -24,8 +28,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ urls });
   } catch (error) {
     console.error('Error uploading files:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to upload files';
     return NextResponse.json(
-      { error: 'Failed to upload files' },
+      { error: errorMessage, details: String(error) },
       { status: 500 }
     );
   }
