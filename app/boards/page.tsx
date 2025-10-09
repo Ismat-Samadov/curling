@@ -7,6 +7,8 @@ import dynamic from 'next/dynamic';
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false });
 
+const DEFAULT_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5SZWtsYW0gTMO2dmjJmXNpPC90ZXh0Pjwvc3ZnPg==';
+
 interface Board {
   id: number;
   title: string;
@@ -116,12 +118,13 @@ export default function BoardsPage() {
             {boards.map((board) => (
               <Link key={board.id} href={`/boards/${board.id}`}>
                 <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition cursor-pointer">
-                  <div className="relative h-48">
+                  <div className="relative h-48 bg-gray-100">
                     <Image
-                      src={board.thumbnailImage}
+                      src={board.thumbnailImage || DEFAULT_PLACEHOLDER}
                       alt={board.title}
                       fill
                       className="object-cover"
+                      unoptimized={!board.thumbnailImage}
                     />
                   </div>
                   <div className="p-4">
