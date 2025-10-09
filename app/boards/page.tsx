@@ -259,9 +259,10 @@ export default function BoardsPage() {
                     <div className="relative h-44 sm:h-56 bg-gradient-to-br from-gray-100 to-gray-200">
                       <Image
                         src={board.thumbnailImage || DEFAULT_PLACEHOLDER}
-                        alt={board.title}
+                        alt={`${board.title} - ${board.boardType} reklam lövhəsi ${board.city} - ${board.width}m × ${board.height}m`}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        loading="lazy"
                         unoptimized={!board.thumbnailImage}
                       />
                       <div className="absolute top-3 right-3">

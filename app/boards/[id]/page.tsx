@@ -256,9 +256,10 @@ export default function BoardDetailPage() {
             <div className="relative h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-lg">
               <Image
                 src={board.thumbnailImage || DEFAULT_PLACEHOLDER}
-                alt={board.title}
+                alt={`${board.title} - ${board.boardType} reklam lövhəsi ${board.city}, ${board.address} - ${board.width}m × ${board.height}m`}
                 fill
                 className="object-cover"
+                priority
                 unoptimized={!board.thumbnailImage}
               />
             </div>
@@ -268,9 +269,10 @@ export default function BoardDetailPage() {
                   <div key={idx} className="relative h-20 sm:h-24 rounded-xl overflow-hidden bg-gray-100 border-2 border-gray-200 hover:border-indigo-400 transition-all cursor-pointer group">
                     <Image
                       src={img || DEFAULT_PLACEHOLDER}
-                      alt={`${board.title} ${idx + 1}`}
+                      alt={`${board.title} - Şəkil ${idx + 1} - ${board.boardType} lövhəsi ${board.city}`}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      loading="lazy"
                       unoptimized={!img}
                     />
                   </div>
