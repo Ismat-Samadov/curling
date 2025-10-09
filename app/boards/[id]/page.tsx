@@ -109,35 +109,57 @@ export default function BoardDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Yüklənir...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mb-4"></div>
+        <p className="text-gray-600 text-lg font-medium">Yüklənir...</p>
       </div>
     );
   }
 
   if (!board) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Lövhə tapılmadı</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        <div className="text-6xl mb-4">❌</div>
+        <p className="text-gray-600 text-lg font-medium">Lövhə tapılmadı</p>
+        <Link
+          href="/boards"
+          className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg"
+        >
+          ← Lövhələrə Qayıt
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      {/* Navigation */}
+      <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-indigo-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/boards">
-            <span className="text-indigo-600 hover:underline cursor-pointer">&larr; Lövhələrə Qayıt</span>
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link href="/boards">
+              <span className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-semibold cursor-pointer transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span className="hidden sm:inline">Lövhələrə Qayıt</span>
+                <span className="sm:hidden">Geri</span>
+              </span>
+            </Link>
+            <Link href="/">
+              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent cursor-pointer">
+                banner.az
+              </h1>
+            </Link>
+          </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Left column - Images */}
-          <div>
-            <div className="relative h-96 mb-4 rounded-xl overflow-hidden bg-gray-100">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="relative h-64 sm:h-80 lg:h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-lg">
               <Image
                 src={board.thumbnailImage || DEFAULT_PLACEHOLDER}
                 alt={board.title}
@@ -147,14 +169,14 @@ export default function BoardDetailPage() {
               />
             </div>
             {board.images && board.images.length > 1 && (
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
                 {board.images.slice(0, 4).map((img, idx) => (
-                  <div key={idx} className="relative h-24 rounded-lg overflow-hidden bg-gray-100">
+                  <div key={idx} className="relative h-20 sm:h-24 rounded-xl overflow-hidden bg-gray-100 border-2 border-gray-200 hover:border-indigo-400 transition-all cursor-pointer group">
                     <Image
                       src={img || DEFAULT_PLACEHOLDER}
                       alt={`${board.title} ${idx + 1}`}
                       fill
-                      className="object-cover"
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
                       unoptimized={!img}
                     />
                   </div>
@@ -162,74 +184,90 @@ export default function BoardDetailPage() {
               </div>
             )}
 
-            <div className="mt-6 bg-white p-4 rounded-xl shadow-md" style={{ height: '300px' }}>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Ünvan</h3>
+            <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-gray-100" style={{ height: '280px', minHeight: '250px' }}>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <span className="text-2xl">📍</span>
+                Ünvan
+              </h3>
               <MapView boards={[board]} center={[board.latitude, board.longitude]} zoom={15} />
             </div>
           </div>
 
           {/* Right column - Details */}
-          <div>
-            <div className="bg-white p-6 rounded-xl shadow-md mb-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">{board.title}</h1>
-                  <p className="text-gray-600">{board.address}</p>
-                  <p className="text-gray-500">{board.city}, {board.country}</p>
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-white p-5 sm:p-6 lg:p-8 rounded-2xl shadow-lg border border-gray-100">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0 mb-4 sm:mb-6">
+                <div className="flex-1">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">{board.title}</h1>
+                  <div className="flex items-start gap-2 text-gray-600 mb-1">
+                    <span className="text-lg mt-0.5">📍</span>
+                    <p className="text-sm sm:text-base">{board.address}</p>
+                  </div>
+                  <p className="text-gray-500 text-sm sm:text-base ml-7">
+                    <span className="font-semibold text-gray-700">{board.city}</span>, {board.country}
+                  </p>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-sm ${
-                  board.status === 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                <span className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap ${
+                  board.status === 'available' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
                 }`}>
-                  {board.status}
+                  {board.status === 'available' ? '✓ Aktiv' : '⏸ Rezerv'}
                 </span>
               </div>
 
-              <p className="text-gray-700 mb-6">{board.description}</p>
+              <p className="text-gray-700 text-sm sm:text-base mb-6 leading-relaxed">{board.description}</p>
 
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-500">Ölçülər</p>
-                  <p className="text-lg font-semibold text-gray-900">{board.width}m × {board.height}m</p>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6">
+                <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 sm:p-5 rounded-xl border border-indigo-100">
+                  <p className="text-xs sm:text-sm text-indigo-600 font-semibold mb-1">📏 Ölçülər</p>
+                  <p className="text-lg sm:text-xl font-bold text-gray-900">{board.width}m × {board.height}m</p>
+                  <p className="text-xs text-gray-500 mt-1">{(board.width * board.height).toFixed(1)} m²</p>
                 </div>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-500">Növ</p>
-                  <p className="text-lg font-semibold text-gray-900">{board.boardType}</p>
-                </div>
-              </div>
-
-              <div className="border-t pt-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Qiymətlər</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Günlük</span>
-                    <span className="font-semibold text-xl text-gray-900">{(board.pricePerDay / 100).toFixed(2)} ₼</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Həftəlik</span>
-                    <span className="font-semibold text-xl text-gray-900">{(board.pricePerWeek / 100).toFixed(2)} ₼</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Aylıq</span>
-                    <span className="font-semibold text-xl text-gray-900">{(board.pricePerMonth / 100).toFixed(2)} ₼</span>
-                  </div>
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 sm:p-5 rounded-xl border border-purple-100">
+                  <p className="text-xs sm:text-sm text-purple-600 font-semibold mb-1">🎯 Növ</p>
+                  <p className="text-lg sm:text-xl font-bold text-gray-900">{board.boardType}</p>
                 </div>
               </div>
 
-              <div className="border-t pt-4 mt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Əlaqə</h3>
-                <div className="space-y-3 mb-4">
-                  <p className="text-gray-700">
-                    <strong className="text-gray-900">Ad:</strong> {board.ownerName}
-                  </p>
-                  <div>
-                    <p className="text-gray-700 mb-2">
-                      <strong className="text-gray-900">Telefon:</strong>{' '}
+              <div className="border-t border-gray-200 pt-5 sm:pt-6">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">💰</span>
+                  Qiymətlər
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-3 sm:p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                    <span className="text-gray-700 font-medium text-sm sm:text-base">📅 Günlük</span>
+                    <span className="font-bold text-xl sm:text-2xl text-gray-900">{(board.pricePerDay / 100).toFixed(0)} ₼</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                    <span className="text-gray-700 font-medium text-sm sm:text-base">📆 Həftəlik</span>
+                    <span className="font-bold text-xl sm:text-2xl text-gray-900">{(board.pricePerWeek / 100).toFixed(0)} ₼</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 sm:p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
+                    <span className="text-gray-700 font-medium text-sm sm:text-base">🗓️ Aylıq</span>
+                    <span className="font-bold text-xl sm:text-2xl text-gray-900">{(board.pricePerMonth / 100).toFixed(0)} ₼</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 pt-5 sm:pt-6 mt-6">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">👤</span>
+                  Əlaqə Məlumatları
+                </h3>
+                <div className="space-y-3 sm:space-y-4 mb-5">
+                  <div className="p-3 sm:p-4 bg-gray-50 rounded-xl">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Ad və Soyad</p>
+                    <p className="text-base sm:text-lg font-semibold text-gray-900">{board.ownerName}</p>
+                  </div>
+                  <div className="p-3 sm:p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+                    <p className="text-xs sm:text-sm text-indigo-600 font-semibold mb-2">📞 Telefon</p>
+                    <p className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                       {phoneRevealed ? board.ownerPhone : maskPhoneNumber(board.ownerPhone)}
                     </p>
                     {!phoneRevealed && (
                       <button
                         onClick={handleRevealPhone}
-                        className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-100 transition text-sm"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-indigo-700 px-4 py-2.5 rounded-lg font-semibold hover:bg-indigo-100 transition-all border-2 border-indigo-200 shadow-sm text-sm"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -240,24 +278,25 @@ export default function BoardDetailPage() {
                     )}
                   </div>
                   {board.ownerEmail && (
-                    <p className="text-gray-700">
-                      <strong className="text-gray-900">E-poçt:</strong> {board.ownerEmail}
-                    </p>
+                    <div className="p-3 sm:p-4 bg-gray-50 rounded-xl">
+                      <p className="text-xs sm:text-sm text-gray-500 mb-1">📧 E-poçt</p>
+                      <p className="text-sm sm:text-base font-medium text-gray-900">{board.ownerEmail}</p>
+                    </div>
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
                     onClick={handleContactOwner}
                     disabled={!phoneRevealed}
-                    className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3.5 rounded-xl font-bold hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed disabled:shadow-none text-sm sm:text-base"
                   >
                     📞 Zəng Et
                   </button>
                   <button
                     onClick={handleWhatsApp}
                     disabled={!phoneRevealed}
-                    className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="bg-gradient-to-r from-emerald-600 to-green-600 text-white px-6 py-3.5 rounded-xl font-bold hover:from-emerald-700 hover:to-green-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed disabled:shadow-none text-sm sm:text-base"
                   >
                     💬 WhatsApp
                   </button>

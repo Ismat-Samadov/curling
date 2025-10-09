@@ -40,25 +40,30 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center px-4 py-8 sm:py-12">
       <div className="max-w-md w-full">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <Link href="/">
-            <h1 className="text-3xl font-bold text-indigo-600 cursor-pointer">banner.az</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent cursor-pointer mb-2">
+              banner.az
+            </h1>
           </Link>
-          <p className="text-gray-600 mt-2">Hesabınıza daxil olun</p>
+          <p className="text-gray-600 text-base sm:text-lg">Hesabınıza daxil olun</p>
+          <p className="text-sm text-gray-500 mt-1">Reklam lövhələrinizi idarə edin</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
-                {error}
+              <div className="bg-red-50 border-2 border-red-200 text-red-700 p-4 rounded-xl text-sm font-medium flex items-start gap-2">
+                <span className="text-lg">⚠️</span>
+                <span>{error}</span>
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                <span>📧</span>
                 E-poçt
               </label>
               <input
@@ -66,13 +71,14 @@ export default function LoginPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 bg-white transition-all"
                 placeholder="email@example.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                <span>🔒</span>
                 Şifrə
               </label>
               <input
@@ -80,7 +86,7 @@ export default function LoginPage() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 bg-white transition-all"
                 placeholder="••••••••"
               />
             </div>
@@ -88,19 +94,32 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:bg-gray-300"
+              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3.5 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98] disabled:transform-none"
             >
-              {loading ? 'Giriş edilir...' : 'Daxil ol'}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  Giriş edilir...
+                </span>
+              ) : (
+                <span>🚀 Daxil ol</span>
+              )}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <p className="text-center text-gray-600 text-sm sm:text-base">
               Hesabınız yoxdur?{' '}
-              <Link href="/register" className="text-indigo-600 hover:underline font-semibold">
+              <Link href="/register" className="text-indigo-600 hover:text-indigo-700 font-bold hover:underline">
                 Qeydiyyatdan keçin
               </Link>
             </p>
+          </div>
+
+          <div className="mt-4 text-center">
+            <Link href="/boards" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+              ← Ana səhifəyə qayıt
+            </Link>
           </div>
         </div>
       </div>
