@@ -11,6 +11,7 @@ export default function AdminPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [step, setStep] = useState(1);
   const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
@@ -179,6 +180,10 @@ export default function AdminPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Prevent double submission
+    if (submitting) return;
+    setSubmitting(true);
+
     try {
       const response = await fetch('/api/boards', {
         method: 'POST',
@@ -198,10 +203,12 @@ export default function AdminPage() {
         window.location.href = `/boards/${data.board.id}`;
       } else {
         alert(data.error || 'Lövhə yerləşdirilmədi');
+        setSubmitting(false);
       }
     } catch (error) {
       console.error('Error creating board:', error);
       alert('Lövhə yerləşdirilmədi');
+      setSubmitting(false);
     }
   };
 
@@ -490,15 +497,17 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
+                  disabled={submitting}
+                  className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition disabled:bg-gray-300"
                 >
                   Geri
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                  disabled={submitting}
+                  className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:bg-gray-300"
                 >
-                  Lövhəmi Yerləşdir
+                  {submitting ? 'Yerləşdirilir...' : 'Lövhəmi Yerləşdir'}
                 </button>
               </div>
             </div>
