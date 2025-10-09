@@ -14,25 +14,14 @@ export const users = posterSchema.table('users', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-// Table 1: Customer identifiers (no login required)
-export const customers = posterSchema.table('customers', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  phone: text('phone').notNull(), // Primary identifier
-  email: text('email'),
-
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-// Table 2: Ad postings (boards)
+// Ad postings (boards)
 export const adPostings = posterSchema.table('ad_postings', {
   id: serial('id').primaryKey(),
 
   // User reference (for authenticated users)
   userId: integer('user_id').references(() => users.id),
 
-  // Owner/Customer reference (optional - can post without being a customer)
-  customerPhone: text('customer_phone'), // References customers by phone
+  // Owner contact information
   ownerName: text('owner_name').notNull(),
   ownerPhone: text('owner_phone').notNull(),
   ownerEmail: text('owner_email'),
@@ -95,8 +84,6 @@ export const statistics = posterSchema.table('statistics', {
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
-export type Customer = typeof customers.$inferSelect;
-export type NewCustomer = typeof customers.$inferInsert;
 export type AdPosting = typeof adPostings.$inferSelect;
 export type NewAdPosting = typeof adPostings.$inferInsert;
 export type Statistic = typeof statistics.$inferSelect;

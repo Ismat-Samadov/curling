@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { adPostings, customers } from '@/lib/db/schema';
+import { adPostings } from '@/lib/db/schema';
 import { desc, sql, and, gte, lte, eq } from 'drizzle-orm';
 import { getAuthUser } from '@/lib/auth';
 
@@ -62,22 +62,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Optionally create/update customer record
-    if (body.ownerPhone) {
-      const existingCustomer = await db.select()
-        .from(customers)
-        .where(eq(customers.phone, body.ownerPhone))
-        .limit(1);
-
-      if (existingCustomer.length === 0) {
-        await db.insert(customers).values({
-          name: body.ownerName,
-          phone: body.ownerPhone,
-          email: body.ownerEmail,
-        });
-      }
-    }
-
     const newBoard = await db.insert(adPostings).values({
       userId: userId || undefined, // Set userId if user is authenticated
       title: body.title,
@@ -98,7 +82,6 @@ export async function POST(request: NextRequest) {
       ownerName: body.ownerName,
       ownerEmail: body.ownerEmail,
       ownerPhone: body.ownerPhone,
-      customerPhone: body.ownerPhone,
     }).returning();
 
     return NextResponse.json({ board: newBoard[0] }, { status: 201 });
