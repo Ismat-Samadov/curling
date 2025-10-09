@@ -114,7 +114,7 @@ export default function BoardDetailPage() {
             )}
 
             <div className="mt-6 bg-white p-4 rounded-xl shadow-md" style={{ height: '300px' }}>
-              <h3 className="text-lg font-semibold mb-2">Ünvan</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Ünvan</h3>
               <MapView boards={[board]} center={[board.latitude, board.longitude]} zoom={15} />
             </div>
           </div>
@@ -140,44 +140,44 @@ export default function BoardDetailPage() {
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-sm text-gray-500">Ölçülər</p>
-                  <p className="text-lg font-semibold">{board.width}m × {board.height}m</p>
+                  <p className="text-lg font-semibold text-gray-900">{board.width}m × {board.height}m</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-sm text-gray-500">Növ</p>
-                  <p className="text-lg font-semibold">{board.boardType}</p>
+                  <p className="text-lg font-semibold text-gray-900">{board.boardType}</p>
                 </div>
               </div>
 
               <div className="border-t pt-4">
-                <h3 className="text-lg font-semibold mb-3">Qiymətlər</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Qiymətlər</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Günlük</span>
-                    <span className="font-semibold text-xl">{(board.pricePerDay / 100).toFixed(2)} ₼</span>
+                    <span className="font-semibold text-xl text-gray-900">{(board.pricePerDay / 100).toFixed(2)} ₼</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Həftəlik</span>
-                    <span className="font-semibold text-xl">{(board.pricePerWeek / 100).toFixed(2)} ₼</span>
+                    <span className="font-semibold text-xl text-gray-900">{(board.pricePerWeek / 100).toFixed(2)} ₼</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Aylıq</span>
-                    <span className="font-semibold text-xl">{(board.pricePerMonth / 100).toFixed(2)} ₼</span>
+                    <span className="font-semibold text-xl text-gray-900">{(board.pricePerMonth / 100).toFixed(2)} ₼</span>
                   </div>
                 </div>
               </div>
 
               <div className="border-t pt-4 mt-6">
-                <h3 className="text-lg font-semibold mb-3">Əlaqə</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Əlaqə</h3>
                 <div className="space-y-2 mb-4">
                   <p className="text-gray-700">
-                    <strong>Ad:</strong> {board.ownerName}
+                    <strong className="text-gray-900">Ad:</strong> {board.ownerName}
                   </p>
                   <p className="text-gray-700">
-                    <strong>Telefon:</strong> {board.ownerPhone}
+                    <strong className="text-gray-900">Telefon:</strong> {board.ownerPhone}
                   </p>
                   {board.ownerEmail && (
                     <p className="text-gray-700">
-                      <strong>E-poçt:</strong> {board.ownerEmail}
+                      <strong className="text-gray-900">E-poçt:</strong> {board.ownerEmail}
                     </p>
                   )}
                 </div>
