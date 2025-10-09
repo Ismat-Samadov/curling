@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadToR2, generateImageKey } from '@/lib/r2';
 
+// Configure route to accept larger payloads
+export const runtime = 'nodejs';
+export const maxDuration = 60; // 60 seconds
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
