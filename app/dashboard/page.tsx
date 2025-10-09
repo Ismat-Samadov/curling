@@ -19,6 +19,16 @@ interface Board {
   pricePerDay: number;
   status: string;
   createdAt: string;
+  viewCount?: number;
+}
+
+interface BoardStats {
+  totalViews: number;
+  uniqueViews: number;
+  phoneReveals: number;
+  last7Days: number;
+  last30Days: number;
+  conversionRate: string;
 }
 
 export default function DashboardPage() {
@@ -27,6 +37,7 @@ export default function DashboardPage() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<number | null>(null);
+  const [boardStats, setBoardStats] = useState<Record<number, BoardStats>>({});
 
   useEffect(() => {
     checkAuth();
@@ -52,7 +63,22 @@ export default function DashboardPage() {
     try {
       const response = await fetch('/api/my-boards');
       const data = await response.json();
-      setBoards(data.boards || []);
+      const fetchedBoards = data.boards || [];
+      setBoards(fetchedBoards);
+
+      // Fetch statistics for each board
+      fetchedBoards.forEach(async (board: Board) => {
+        try {
+          const statsResponse = await fetch(`/api/statistics/${board.id}`);
+          const statsData = await statsResponse.json();
+          setBoardStats(prev => ({
+            ...prev,
+            [board.id]: statsData,
+          }));
+        } catch (error) {
+          console.error(`Error fetching stats for board ${board.id}:`, error);
+        }
+      });
     } catch (error) {
       console.error('Error fetching boards:', error);
     } finally {
@@ -185,6 +211,26 @@ export default function DashboardPage() {
                       {board.boardType}
                     </span>
                   </div>
+
+                  {/* Statistics */}
+                  {boardStats[board.id] && (
+                    <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                      <div className="grid grid-cols-3 gap-2 text-center">
+                        <div>
+                          <p className="text-lg font-bold text-gray-900">{boardStats[board.id].totalViews}</p>
+                          <p className="text-xs text-gray-500">Baxış</p>
+                        </div>
+                        <div>
+                          <p className="text-lg font-bold text-indigo-600">{boardStats[board.id].phoneReveals}</p>
+                          <p className="text-xs text-gray-500">Nömrə</p>
+                        </div>
+                        <div>
+                          <p className="text-lg font-bold text-green-600">{boardStats[board.id].conversionRate}%</p>
+                          <p className="text-xs text-gray-500">Dönüşüm</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-3 gap-2">
                     <Link

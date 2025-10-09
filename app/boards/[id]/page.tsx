@@ -48,10 +48,30 @@ export default function BoardDetailPage() {
       const response = await fetch(`/api/boards/${params.id}`);
       const data = await response.json();
       setBoard(data.board);
+
+      // Track view after board is loaded
+      if (data.board) {
+        trackEvent('view');
+      }
     } catch (error) {
       console.error('Error fetching board:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const trackEvent = async (eventType: 'view' | 'phone_reveal') => {
+    try {
+      await fetch('/api/statistics/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listingId: parseInt(params.id as string),
+          eventType,
+        }),
+      });
+    } catch (error) {
+      console.error('Error tracking event:', error);
     }
   };
 
@@ -84,6 +104,7 @@ export default function BoardDetailPage() {
 
   const handleRevealPhone = () => {
     setPhoneRevealed(true);
+    trackEvent('phone_reveal');
   };
 
   if (loading) {

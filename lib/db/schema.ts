@@ -73,9 +73,31 @@ export const adPostings = posterSchema.table('ad_postings', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+// Table 3: Statistics for tracking views and phone reveals
+export const statistics = posterSchema.table('statistics', {
+  id: serial('id').primaryKey(),
+
+  // Reference to the listing
+  listingId: integer('listing_id').references(() => adPostings.id).notNull(),
+
+  // Event type: 'view' or 'phone_reveal'
+  eventType: text('event_type').notNull(), // 'view' | 'phone_reveal'
+
+  // Optional: track IP for unique views (anonymized)
+  ipHash: text('ip_hash'), // hashed IP for privacy
+
+  // Optional: user agent for analytics
+  userAgent: text('user_agent'),
+
+  // Timestamp
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Customer = typeof customers.$inferSelect;
 export type NewCustomer = typeof customers.$inferInsert;
 export type AdPosting = typeof adPostings.$inferSelect;
 export type NewAdPosting = typeof adPostings.$inferInsert;
+export type Statistic = typeof statistics.$inferSelect;
+export type NewStatistic = typeof statistics.$inferInsert;
