@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { adPostings, customers } from '@/lib/db/schema';
 import { desc, sql, and, gte, lte, eq } from 'drizzle-orm';
+import { getAuthUser } from '@/lib/auth';
 
 // GET /api/boards - Get all ad postings with optional filters
 export async function GET(request: NextRequest) {
@@ -50,6 +51,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    // Get authenticated user ID
+    const userId = await getAuthUser();
+
     // Basic validation
     if (!body.title || !body.latitude || !body.longitude || !body.ownerPhone) {
       return NextResponse.json(
@@ -75,6 +79,7 @@ export async function POST(request: NextRequest) {
     }
 
     const newBoard = await db.insert(adPostings).values({
+      userId: userId || undefined, // Set userId if user is authenticated
       title: body.title,
       description: body.description,
       latitude: body.latitude,
