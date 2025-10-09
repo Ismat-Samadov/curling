@@ -22,16 +22,23 @@ export function useToast() {
   }, []);
 
   const ToastContainer = useCallback(() => (
-    <>
-      {toasts.map((toast) => (
-        <Toast
+    <div className="fixed top-20 right-4 z-[100] flex flex-col gap-3 pointer-events-none">
+      {toasts.map((toast, index) => (
+        <div
           key={toast.id}
-          message={toast.message}
-          type={toast.type}
-          onClose={() => removeToast(toast.id)}
-        />
+          className="pointer-events-auto"
+          style={{
+            animation: `slide-in-right 0.3s ease-out ${index * 0.1}s both`,
+          }}
+        >
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => removeToast(toast.id)}
+          />
+        </div>
       ))}
-    </>
+    </div>
   ), [toasts, removeToast]);
 
   return {

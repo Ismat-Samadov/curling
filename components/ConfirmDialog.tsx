@@ -19,28 +19,58 @@ export default function ConfirmDialog({
   cancelText = 'Ləğv et',
   type = 'warning',
 }: ConfirmDialogProps) {
-  const buttonColors = {
-    danger: 'bg-red-600 hover:bg-red-700',
-    warning: 'bg-yellow-600 hover:bg-yellow-700',
-    info: 'bg-indigo-600 hover:bg-indigo-700',
+  const typeConfig = {
+    danger: {
+      color: 'bg-red-600 hover:bg-red-700 focus:ring-red-500',
+      icon: '⚠️',
+      iconBg: 'bg-red-100',
+      iconColor: 'text-red-600',
+    },
+    warning: {
+      color: 'bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500',
+      icon: '⚡',
+      iconBg: 'bg-yellow-100',
+      iconColor: 'text-yellow-600',
+    },
+    info: {
+      color: 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500',
+      icon: 'ℹ️',
+      iconBg: 'bg-indigo-100',
+      iconColor: 'text-indigo-600',
+    },
   };
 
+  const config = typeConfig[type];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-fade-in">
-      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 animate-scale-in">
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
-          <p className="text-gray-600 mb-6">{message}</p>
-          <div className="flex gap-3 justify-end">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div
+        className="bg-white rounded-2xl shadow-2xl max-w-md w-full animate-scale-in overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Icon Header */}
+        <div className={`${config.iconBg} p-6 flex justify-center`}>
+          <div className="w-16 h-16 rounded-full bg-white shadow-lg flex items-center justify-center">
+            <span className="text-4xl">{config.icon}</span>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 pt-4">
+          <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">{title}</h3>
+          <p className="text-gray-600 mb-6 text-center leading-relaxed">{message}</p>
+
+          {/* Actions */}
+          <div className="flex gap-3">
             <button
               onClick={onCancel}
-              className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
+              className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all focus:ring-2 focus:ring-gray-300 focus:outline-none"
             >
               {cancelText}
             </button>
             <button
               onClick={onConfirm}
-              className={`px-6 py-2.5 ${buttonColors[type]} text-white rounded-lg font-semibold transition`}
+              className={`flex-1 px-6 py-3 ${config.color} text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl focus:ring-2 focus:outline-none transform hover:scale-[1.02] active:scale-[0.98]`}
             >
               {confirmText}
             </button>
