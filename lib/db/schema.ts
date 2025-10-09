@@ -1,7 +1,10 @@
-import { pgTable, serial, text, real, timestamp, integer, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, real, timestamp, integer, boolean, pgSchema } from 'drizzle-orm/pg-core';
+
+// Define the poster schema
+export const posterSchema = pgSchema('poster');
 
 // Table 1: Customer identifiers (no login required)
-export const customers = pgTable('customers', {
+export const customers = posterSchema.table('customers', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
   phone: text('phone').notNull(), // Primary identifier
@@ -11,7 +14,7 @@ export const customers = pgTable('customers', {
 });
 
 // Table 2: Ad postings (boards)
-export const adPostings = pgTable('ad_postings', {
+export const adPostings = posterSchema.table('ad_postings', {
   id: serial('id').primaryKey(),
 
   // Owner/Customer reference (optional - can post without being a customer)

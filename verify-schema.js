@@ -6,14 +6,14 @@ async function verifySchema() {
 
   try {
     const result = await pool.query(`
-      SELECT table_name
+      SELECT table_schema, table_name
       FROM information_schema.tables
-      WHERE table_schema = 'public'
-      ORDER BY table_name;
+      WHERE table_schema IN ('public', 'poster')
+      ORDER BY table_schema, table_name;
     `);
 
-    console.log('Tables in poster schema:');
-    result.rows.forEach(row => console.log(`- ${row.table_name}`));
+    console.log('Tables in database:');
+    result.rows.forEach(row => console.log(`- ${row.table_schema}.${row.table_name}`));
 
   } catch (error) {
     console.error('Error:', error.message);
