@@ -75,7 +75,7 @@ export default function BoardsPage() {
             <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white"
             >
               <option value="">Bütün Şəhərlər</option>
               {cities.map(city => (
@@ -137,7 +137,7 @@ export default function BoardsPage() {
                         </p>
                         <p className="text-xs text-gray-500">gün</p>
                       </div>
-                      <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm">
+                      <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
                         {board.boardType}
                       </span>
                     </div>
