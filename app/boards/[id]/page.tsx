@@ -37,6 +37,7 @@ export default function BoardDetailPage() {
   const params = useParams();
   const [board, setBoard] = useState<Board | null>(null);
   const [loading, setLoading] = useState(true);
+  const [phoneRevealed, setPhoneRevealed] = useState(false);
 
   useEffect(() => {
     fetchBoard();
@@ -65,6 +66,24 @@ export default function BoardDetailPage() {
       const message = encodeURIComponent(`Salam! ${board.title} elanınız haqqında məlumat almaq istərdim.`);
       window.open(`https://wa.me/${board.ownerPhone.replace(/\D/g, '')}?text=${message}`, '_blank');
     }
+  };
+
+  const maskPhoneNumber = (phone: string) => {
+    if (!phone) return '';
+    // Show first 3 and last 2 digits, mask the rest
+    // Example: +994501234567 -> +994 50 *** ** 67
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.length < 5) return phone;
+
+    const countryCode = phone.startsWith('+') ? '+' + cleaned.substring(0, 3) : cleaned.substring(0, 3);
+    const firstPart = cleaned.substring(3, 5);
+    const lastPart = cleaned.substring(cleaned.length - 2);
+
+    return `${countryCode} ${firstPart} *** ** ${lastPart}`;
+  };
+
+  const handleRevealPhone = () => {
+    setPhoneRevealed(true);
   };
 
   if (loading) {
@@ -177,13 +196,28 @@ export default function BoardDetailPage() {
 
               <div className="border-t pt-4 mt-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Əlaqə</h3>
-                <div className="space-y-2 mb-4">
+                <div className="space-y-3 mb-4">
                   <p className="text-gray-700">
                     <strong className="text-gray-900">Ad:</strong> {board.ownerName}
                   </p>
-                  <p className="text-gray-700">
-                    <strong className="text-gray-900">Telefon:</strong> {board.ownerPhone}
-                  </p>
+                  <div>
+                    <p className="text-gray-700 mb-2">
+                      <strong className="text-gray-900">Telefon:</strong>{' '}
+                      {phoneRevealed ? board.ownerPhone : maskPhoneNumber(board.ownerPhone)}
+                    </p>
+                    {!phoneRevealed && (
+                      <button
+                        onClick={handleRevealPhone}
+                        className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-100 transition text-sm"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Nömrəni Göstər
+                      </button>
+                    )}
+                  </div>
                   {board.ownerEmail && (
                     <p className="text-gray-700">
                       <strong className="text-gray-900">E-poçt:</strong> {board.ownerEmail}
@@ -194,13 +228,15 @@ export default function BoardDetailPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={handleContactOwner}
-                    className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
+                    disabled={!phoneRevealed}
+                    className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
                     📞 Zəng Et
                   </button>
                   <button
                     onClick={handleWhatsApp}
-                    className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition flex items-center justify-center gap-2"
+                    disabled={!phoneRevealed}
+                    className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
                     💬 WhatsApp
                   </button>
