@@ -374,7 +374,8 @@ export default function EditBoardPage() {
             <label className="block text-sm font-medium text-gray-700 mb-2">Ünvan *</label>
             <LocationPicker
               onLocationSelect={handleLocationSelect}
-              initialPosition={formData.latitude && formData.longitude ? [formData.latitude, formData.longitude] : undefined}
+              initialLat={formData.latitude || undefined}
+              initialLng={formData.longitude || undefined}
             />
           </div>
 
