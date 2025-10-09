@@ -229,6 +229,9 @@ export default function AdminPage() {
               <Link href="/boards" className="text-gray-700 hover:text-indigo-600">
                 Lövhələr
               </Link>
+              <Link href="/dashboard" className="text-gray-700 hover:text-indigo-600">
+                Paneliniz
+              </Link>
               <span className="text-gray-600">Salam, {user.name}</span>
               <button
                 onClick={handleLogout}
