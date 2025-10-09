@@ -151,6 +151,13 @@ export default function BoardDetailPage() {
                 banner.az
               </h1>
             </Link>
+            <Link
+              href="/login"
+              className="px-3 sm:px-4 py-2 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-all font-semibold text-sm sm:text-base border-2 border-transparent hover:border-indigo-200"
+            >
+              <span className="hidden sm:inline">🔐 Daxil ol</span>
+              <span className="sm:hidden">🔐</span>
+            </Link>
           </div>
         </div>
       </nav>

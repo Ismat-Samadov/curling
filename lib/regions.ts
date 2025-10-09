@@ -1,118 +1,86 @@
-// Azerbaijan regions and cities data
-export const AZERBAIJAN_REGIONS = {
-  'Bakı': [
-    'Bakı',
-    'Abşeron',
-    'Xəzər',
-    'Pirallahı',
-    'Nərimanov',
-    'Nəsimi',
-    'Yasamal',
-    'Səbail',
-    'Binəqədi',
-    'Suraxanı',
-    'Sabunçu',
-    'Qaradağ'
-  ],
-  'Gəncə': [
-    'Gəncə',
-    'Göygöl',
-    'Daşkəsən',
-    'Goranboy',
-    'Samux'
-  ],
-  'Sumqayıt': [
-    'Sumqayıt'
-  ],
-  'Mingəçevir': [
-    'Mingəçevir'
-  ],
-  'Şirvan': [
-    'Şirvan',
-    'Sabirabad',
-    'Neftçala',
-    'Biləsuvar'
-  ],
-  'Naxçıvan MR': [
-    'Naxçıvan',
-    'Şahbuz',
-    'Ordubad',
-    'Culfa',
-    'Babək',
-    'Şərur',
-    'Kəngərli',
-    'Sədərək'
-  ],
-  'Lənkəran-Astara': [
-    'Lənkəran',
-    'Astara',
-    'Lerik',
-    'Yardımlı',
-    'Masallı',
-    'Cəlilabad'
-  ],
-  'Quba-Xaçmaz': [
-    'Quba',
-    'Qusar',
-    'Xaçmaz',
-    'Şabran',
-    'Siyəzən',
-    'Xızı'
-  ],
-  'Şəki-Zaqatala': [
-    'Şəki',
-    'Zaqatala',
-    'Qax',
-    'Oğuz',
-    'Qəbələ',
-    'Balakən'
-  ],
-  'Yevlax': [
-    'Yevlax',
-    'Ağdaş',
-    'Zərdab',
-    'Göyçay',
-    'Ucar'
-  ],
-  'Qarabağ': [
-    'Ağdam',
-    'Füzuli',
-    'Xocavənd',
-    'Kəlbəcər',
-    'Laçın',
-    'Qubadlı',
-    'Zəngilan',
-    'Şuşa',
-    'Xankəndi'
-  ],
-  'Aran': [
-    'Bərdə',
-    'İmişli',
-    'Kürdəmir',
-    'Ağcabədi',
-    'Beyləqan',
-    'Saatlı',
-    'Hacıqabul'
-  ],
-  'Mil-Muğan': [
-    'Salyan',
-    'Neftçala',
-    'Biləsuvar'
-  ],
-  'Qazax': [
-    'Qazax',
-    'Ağstafa',
-    'Tovuz',
-    'Gədəbəy',
-    'Şəmkir'
-  ],
-  'Dağlıq Şirvan': [
-    'İsmayıllı',
-    'Ağsu',
-    'Şamaxı',
-    'Qobustan'
-  ]
-} as const;
+// Azerbaijan districts (rayons) - all 78 cities/districts
+export const AZERBAIJAN_CITIES = [
+  'Abşeron',
+  'Ağcabədi',
+  'Ağdam',
+  'Ağdaş',
+  'Ağdərə',
+  'Ağstafa',
+  'Ağsu',
+  'Astara',
+  'Babək',
+  'Bakı',
+  'Balakən',
+  'Beyləqan',
+  'Bərdə',
+  'Biləsuvar',
+  'Cəbrayıl',
+  'Cəlilabad',
+  'Culfa',
+  'Daşkəsən',
+  'Dəliməmmədli',
+  'Füzuli',
+  'Gədəbəy',
+  'Gəncə',
+  'Goranboy',
+  'Göyçay',
+  'Göygöl',
+  'Göytəpə',
+  'Hacıqabul',
+  'Horadiz',
+  'Xaçmaz',
+  'Xankəndi',
+  'Xızı',
+  'Xırdalan',
+  'Xocalı',
+  'Xocavənd',
+  'Xudat',
+  'İmişli',
+  'İsmayıllı',
+  'Kəlbəcər',
+  'Kürdəmir',
+  'Qax',
+  'Qazax',
+  'Qəbələ',
+  'Qobustan',
+  'Qovlar',
+  'Quba',
+  'Qubadlı',
+  'Qusar',
+  'Laçın',
+  'Lerik',
+  'Lənkəran',
+  'Liman',
+  'Masallı',
+  'Mingəçevir',
+  'Naftalan',
+  'Naxçıvan',
+  'Neftçala',
+  'Oğuz',
+  'Ordubad',
+  'Saatlı',
+  'Sabirabad',
+  'Salyan',
+  'Samux',
+  'Siyəzən',
+  'Sumqayıt',
+  'Şabran',
+  'Şahbuz',
+  'Şamaxı',
+  'Şəki',
+  'Şəmkir',
+  'Şərur',
+  'Şirvan',
+  'Şuşa',
+  'Tərtər',
+  'Tovuz',
+  'Ucar',
+  'Yardımlı',
+  'Yevlax',
+  'Zaqatala',
+  'Zəngilan',
+  'Zərdab'
+] as const;
 
 export const BOARD_TYPES = [
   { value: 'billboard', label: '🔶 Bilbord', description: 'Böyük ölçülü reklam lövhəsi' },
@@ -125,23 +93,9 @@ export const BOARD_TYPES = [
   { value: 'roof', label: '🏠 Dam Lövhəsi', description: 'Bina damında reklam' }
 ] as const;
 
-// Get all cities from all regions
+// Get all cities as array
 export const getAllCities = (): string[] => {
-  const cities: string[] = [];
-  Object.values(AZERBAIJAN_REGIONS).forEach(regionCities => {
-    cities.push(...regionCities);
-  });
-  return [...new Set(cities)].sort();
-};
-
-// Get region for a city
-export const getRegionForCity = (city: string): string | null => {
-  for (const [region, cities] of Object.entries(AZERBAIJAN_REGIONS)) {
-    if ((cities as readonly string[]).includes(city)) {
-      return region;
-    }
-  }
-  return null;
+  return [...AZERBAIJAN_CITIES];
 };
 
 // Default coordinates for Azerbaijan (Baku center)

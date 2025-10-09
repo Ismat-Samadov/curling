@@ -65,13 +65,22 @@ export default function BoardsPage() {
                 banner.az
               </h1>
             </Link>
-            <Link
-              href="/login"
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg text-sm sm:text-base font-semibold"
-            >
-              <span className="hidden sm:inline">+ Elan Yerləşdir</span>
-              <span className="sm:hidden">+ Elan</span>
-            </Link>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Link
+                href="/login"
+                className="px-3 sm:px-4 py-2 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-all font-semibold text-sm sm:text-base border-2 border-transparent hover:border-indigo-200"
+              >
+                <span className="hidden sm:inline">🔐 Daxil ol</span>
+                <span className="sm:hidden">🔐</span>
+              </Link>
+              <Link
+                href="/login"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg text-sm sm:text-base font-semibold"
+              >
+                <span className="hidden sm:inline">+ Elan Yerləşdir</span>
+                <span className="sm:hidden">+ Elan</span>
+              </Link>
+            </div>
           </div>
         </div>
       </nav>

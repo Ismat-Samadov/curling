@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useToast } from '@/hooks/useToast';
-import { AZERBAIJAN_REGIONS, BOARD_TYPES, CITY_COORDINATES } from '@/lib/regions';
+import { AZERBAIJAN_CITIES, BOARD_TYPES, CITY_COORDINATES } from '@/lib/regions';
 
 const LocationPicker = dynamic(() => import('@/components/LocationPicker'), { ssr: false });
 
@@ -18,9 +18,6 @@ export default function AdminPage() {
   const [step, setStep] = useState(1);
   const [uploading, setUploading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [selectedRegion, setSelectedRegion] = useState('');
-  const [availableCities, setAvailableCities] = useState<string[]>([]);
-
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -189,17 +186,6 @@ export default function AdminPage() {
     } finally {
       setUploading(false);
     }
-  };
-
-  // Handle region selection
-  const handleRegionChange = (region: string) => {
-    setSelectedRegion(region);
-    const cities = AZERBAIJAN_REGIONS[region as keyof typeof AZERBAIJAN_REGIONS];
-    setAvailableCities(cities ? [...cities] : []);
-    setFormData(prev => ({
-      ...prev,
-      city: '', // Reset city when region changes
-    }));
   };
 
   // Handle city selection and update map coordinates
@@ -561,53 +547,25 @@ export default function AdminPage() {
               </div>
 
               <div className="space-y-5">
-                {/* Country (Fixed to Azerbaijan) */}
+                {/* City/District Selection */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">🌍 Ölkə *</label>
-                  <div className="w-full px-4 py-3 border-2 border-gray-200 bg-gray-50 rounded-xl text-gray-900 font-semibold">
-                    🇦🇿 Azərbaycan
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Hazırda yalnız Azərbaycan daxilində elanlar yerləşdirilə bilər</p>
-                </div>
-
-                {/* Region and City Selection */}
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">📍 Region *</label>
-                    <select
-                      required
-                      value={selectedRegion}
-                      onChange={(e) => handleRegionChange(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all bg-white"
-                    >
-                      <option value="">Region seçin</option>
-                      {Object.keys(AZERBAIJAN_REGIONS).map((region) => (
-                        <option key={region} value={region}>
-                          {region}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">🏙️ Şəhər *</label>
-                    <select
-                      required
-                      value={formData.city}
-                      onChange={(e) => handleCityChange(e.target.value)}
-                      disabled={!selectedRegion}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    >
-                      <option value="">
-                        {selectedRegion ? 'Şəhər seçin' : 'Əvvəlcə region seçin'}
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">🏙️ Şəhər / Rayon *</label>
+                  <select
+                    required
+                    value={formData.city}
+                    onChange={(e) => handleCityChange(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all bg-white"
+                  >
+                    <option value="">Şəhər və ya rayon seçin</option>
+                    {AZERBAIJAN_CITIES.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
                       </option>
-                      {availableCities.map((city) => (
-                        <option key={city} value={city}>
-                          {city}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Azərbaycanda yerləşən bütün şəhər və rayonlar
+                  </p>
                 </div>
 
                 <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-5 rounded-xl border border-indigo-100">
