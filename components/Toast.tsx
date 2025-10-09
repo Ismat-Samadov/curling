@@ -35,14 +35,14 @@ export default function Toast({ message, type, onClose, duration = 3000 }: Toast
   };
 
   return (
-    <div className={`${bgColors[type]} text-white px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-sm flex items-center gap-3 min-w-[320px] max-w-md border border-white/20`}>
-      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-        <span className="text-2xl">{icons[type]}</span>
+    <div className={`${bgColors[type]} text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl shadow-2xl backdrop-blur-sm flex items-center gap-2 sm:gap-3 w-full border border-white/20`}>
+      <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/20 flex items-center justify-center">
+        <span className="text-xl sm:text-2xl">{icons[type]}</span>
       </div>
-      <p className="flex-1 font-medium">{message}</p>
+      <p className="flex-1 font-medium text-sm sm:text-base leading-snug">{message}</p>
       <button
         onClick={onClose}
-        className="flex-shrink-0 w-8 h-8 rounded-full hover:bg-white/20 transition-colors flex items-center justify-center text-white text-xl font-bold"
+        className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full hover:bg-white/20 transition-colors flex items-center justify-center text-white text-lg sm:text-xl font-bold"
         aria-label="Close notification"
       >
         ×

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { BoardCardSkeleton } from '@/components/LoadingSkeleton';
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false });
 
@@ -228,9 +229,10 @@ export default function BoardsPage() {
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-16 sm:py-20">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-4 border-indigo-600 mb-4"></div>
-            <p className="text-gray-600 text-base sm:text-lg font-medium">Yüklənir...</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <BoardCardSkeleton key={i} />
+            ))}
           </div>
         ) : boards.length === 0 ? (
           <div className="text-center py-16 sm:py-20 bg-white rounded-2xl shadow-sm border border-gray-100">

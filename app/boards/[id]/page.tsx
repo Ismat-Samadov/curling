@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { BoardDetailSkeleton } from '@/components/LoadingSkeleton';
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false });
 
@@ -132,12 +133,7 @@ export default function BoardDetailPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-        <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mb-4"></div>
-        <p className="text-gray-600 text-lg font-medium">Yüklənir...</p>
-      </div>
-    );
+    return <BoardDetailSkeleton />;
   }
 
   if (!board) {

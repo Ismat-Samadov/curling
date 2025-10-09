@@ -443,24 +443,41 @@ export default function AdminPage() {
                   <input
                     type="text"
                     required
+                    minLength={10}
+                    maxLength={100}
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     placeholder="məs., Ana Yolda Premium Bilbord"
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all"
                   />
+                  <div className="flex justify-between items-center mt-1">
+                    <p className="text-xs text-gray-500">Minimum 10 simvol</p>
+                    <p className={`text-xs ${formData.title.length > 100 ? 'text-red-500' : formData.title.length > 80 ? 'text-yellow-600' : 'text-gray-500'}`}>
+                      {formData.title.length}/100
+                    </p>
+                  </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Təsvir *</label>
                   <textarea
                     required
+                    minLength={30}
+                    maxLength={500}
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Reklam lövhənizi, görünməsini, trafiki və xüsusi xüsusiyyətlərini təsvir edin..."
                     rows={4}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 transition-all resize-none"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Minimum 50 simvol tövsiyə olunur</p>
+                  <div className="flex justify-between items-center mt-1">
+                    <p className={`text-xs ${formData.description.length < 30 ? 'text-yellow-600' : 'text-green-600'}`}>
+                      {formData.description.length < 30 ? `Daha ${30 - formData.description.length} simvol lazımdır` : '✓ Kifayət qədər məlumat'}
+                    </p>
+                    <p className={`text-xs ${formData.description.length > 500 ? 'text-red-500' : formData.description.length > 450 ? 'text-yellow-600' : 'text-gray-500'}`}>
+                      {formData.description.length}/500
+                    </p>
+                  </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -525,7 +542,14 @@ export default function AdminPage() {
 
               <button
                 type="button"
-                onClick={() => setStep(2)}
+                onClick={() => {
+                  const isValid = formData.title && formData.description && formData.width > 0 && formData.height > 0 && formData.boardType;
+                  if (isValid) {
+                    setStep(2);
+                  } else {
+                    toast.warning('Zəhmət olmasa bütün məcburi sahələri doldurun');
+                  }
+                }}
                 className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 Növbəti: Ünvan və Şəkillər →
@@ -651,9 +675,22 @@ export default function AdminPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setStep(3)}
-                  disabled={formData.images.length === 0}
-                  className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed disabled:transform-none"
+                  onClick={() => {
+                    if (formData.images.length === 0) {
+                      toast.warning('Ən azı bir şəkil yükləyin');
+                      return;
+                    }
+                    if (!formData.city) {
+                      toast.warning('Şəhər seçin');
+                      return;
+                    }
+                    if (!formData.address) {
+                      toast.warning('Xəritədə məkanı seçin');
+                      return;
+                    }
+                    setStep(3);
+                  }}
+                  className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Növbəti: Qiymətlər →
                 </button>
