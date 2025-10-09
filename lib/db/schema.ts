@@ -3,6 +3,17 @@ import { pgTable, serial, text, real, timestamp, integer, boolean, pgSchema } fr
 // Define the poster schema
 export const posterSchema = pgSchema('poster');
 
+// Users table for authentication
+export const users = posterSchema.table('users', {
+  id: serial('id').primaryKey(),
+  email: text('email').unique().notNull(),
+  passwordHash: text('password_hash').notNull(),
+  name: text('name').notNull(),
+  phone: text('phone'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
 // Table 1: Customer identifiers (no login required)
 export const customers = posterSchema.table('customers', {
   id: serial('id').primaryKey(),
@@ -16,6 +27,9 @@ export const customers = posterSchema.table('customers', {
 // Table 2: Ad postings (boards)
 export const adPostings = posterSchema.table('ad_postings', {
   id: serial('id').primaryKey(),
+
+  // User reference (for authenticated users)
+  userId: integer('user_id').references(() => users.id),
 
   // Owner/Customer reference (optional - can post without being a customer)
   customerPhone: text('customer_phone'), // References customers by phone
@@ -59,6 +73,8 @@ export const adPostings = posterSchema.table('ad_postings', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
 export type Customer = typeof customers.$inferSelect;
 export type NewCustomer = typeof customers.$inferInsert;
 export type AdPosting = typeof adPostings.$inferSelect;

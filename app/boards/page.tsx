@@ -60,8 +60,8 @@ export default function BoardsPage() {
             <Link href="/">
               <h1 className="text-2xl font-bold text-indigo-600 cursor-pointer">banner.az</h1>
             </Link>
-            <Link href="/admin" className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-              Lövhə Yerləşdir
+            <Link href="/login" className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+              Elan Yerləşdir
             </Link>
           </div>
         </div>

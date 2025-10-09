@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
 const LocationPicker = dynamic(() => import('@/components/LocationPicker'), { ssr: false });
 
 export default function AdminPage() {
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
   const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
@@ -29,6 +33,47 @@ export default function AdminPage() {
     ownerEmail: '',
     ownerPhone: '',
   });
+
+  // Check authentication
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/auth/me');
+        const data = await response.json();
+
+        if (!data.user) {
+          router.push('/login');
+        } else {
+          setUser(data.user);
+          // Pre-fill form with user data
+          setFormData(prev => ({
+            ...prev,
+            ownerName: data.user.name,
+            ownerEmail: data.user.email,
+            ownerPhone: data.user.phone || '',
+          }));
+        }
+      } catch (error) {
+        router.push('/login');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    checkAuth();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Yüklənir...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   const compressImage = async (file: File): Promise<File> => {
     return new Promise((resolve) => {
@@ -160,6 +205,11 @@ export default function AdminPage() {
     }
   };
 
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
@@ -168,9 +218,18 @@ export default function AdminPage() {
             <Link href="/">
               <h1 className="text-2xl font-bold text-indigo-600 cursor-pointer">banner.az</h1>
             </Link>
-            <Link href="/boards" className="text-gray-700 hover:text-indigo-600">
-              Lövhələr
-            </Link>
+            <div className="flex items-center gap-4">
+              <Link href="/boards" className="text-gray-700 hover:text-indigo-600">
+                Lövhələr
+              </Link>
+              <span className="text-gray-600">Salam, {user.name}</span>
+              <button
+                onClick={handleLogout}
+                className="text-red-600 hover:text-red-700 font-semibold"
+              >
+                Çıxış
+              </button>
+            </div>
           </div>
         </div>
       </nav>
