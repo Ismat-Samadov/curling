@@ -13,31 +13,27 @@ export async function GET(request: NextRequest) {
     const minLng = searchParams.get('minLng');
     const maxLng = searchParams.get('maxLng');
 
-    let query = db.select().from(adPostings).where(sql`is_active = true`);
-
-    // Apply filters if provided
-    const conditions = [];
+    // Build all conditions
+    const conditions = [eq(adPostings.isActive, true)];
 
     if (city) {
-      conditions.push(sql`LOWER(city) = LOWER(${city})`);
+      conditions.push(sql`LOWER(${adPostings.city}) = LOWER(${city})`);
     }
 
     if (minLat && maxLat && minLng && maxLng) {
       conditions.push(
-        and(
-          gte(adPostings.latitude, parseFloat(minLat)),
-          lte(adPostings.latitude, parseFloat(maxLat)),
-          gte(adPostings.longitude, parseFloat(minLng)),
-          lte(adPostings.longitude, parseFloat(maxLng))
-        )
+        gte(adPostings.latitude, parseFloat(minLat)),
+        lte(adPostings.latitude, parseFloat(maxLat)),
+        gte(adPostings.longitude, parseFloat(minLng)),
+        lte(adPostings.longitude, parseFloat(maxLng))
       );
     }
 
-    if (conditions.length > 0) {
-      query = query.where(and(...conditions));
-    }
-
-    const allBoards = await query.orderBy(desc(adPostings.createdAt));
+    const allBoards = await db
+      .select()
+      .from(adPostings)
+      .where(and(...conditions))
+      .orderBy(desc(adPostings.createdAt));
 
     return NextResponse.json({ boards: allBoards });
   } catch (error) {

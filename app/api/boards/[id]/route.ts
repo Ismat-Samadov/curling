@@ -6,10 +6,11 @@ import { eq, sql } from 'drizzle-orm';
 // GET /api/boards/[id] - Get a single ad posting
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const boardId = parseInt(params.id);
+    const { id } = await params;
+    const boardId = parseInt(id);
 
     const board = await db.select()
       .from(adPostings)
@@ -41,10 +42,11 @@ export async function GET(
 // PUT /api/boards/[id] - Update an ad posting
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const boardId = parseInt(params.id);
+    const { id } = await params;
+    const boardId = parseInt(id);
     const body = await request.json();
 
     const updatedBoard = await db.update(adPostings)
@@ -75,10 +77,11 @@ export async function PUT(
 // DELETE /api/boards/[id] - Delete an ad posting (soft delete by setting isActive to false)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const boardId = parseInt(params.id);
+    const { id } = await params;
+    const boardId = parseInt(id);
 
     const deletedBoard = await db.update(adPostings)
       .set({ isActive: false, updatedAt: new Date() })
