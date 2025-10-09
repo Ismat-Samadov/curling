@@ -10,6 +10,7 @@ export const users = posterSchema.table('users', {
   passwordHash: text('password_hash').notNull(),
   name: text('name').notNull(),
   phone: text('phone'),
+  isAdmin: boolean('is_admin').default(false).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

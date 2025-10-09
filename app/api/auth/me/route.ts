@@ -18,6 +18,8 @@ export async function GET() {
         email: users.email,
         name: users.name,
         phone: users.phone,
+        isAdmin: users.isAdmin,
+        createdAt: users.createdAt,
       })
       .from(users)
       .where(eq(users.id, userId))

@@ -204,6 +204,14 @@ export default function DashboardPage() {
                 </h1>
               </Link>
               <div className="flex items-center gap-2 sm:gap-4">
+                {user?.isAdmin && (
+                  <Link
+                    href="/admin-panel"
+                    className="hidden sm:block px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 text-white rounded-lg font-semibold hover:from-red-700 hover:to-orange-700 transition-all shadow-md hover:shadow-lg"
+                  >
+                    👑 Admin Panel
+                  </Link>
+                )}
                 <Link
                   href="/boards"
                   className="hidden sm:block px-4 py-2 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
