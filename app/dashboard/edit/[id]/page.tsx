@@ -187,6 +187,35 @@ export default function EditBoardPage() {
     }
   };
 
+  const handleImageDelete = async (imageUrl: string) => {
+    if (!confirm('Bu şəkli silmək istədiyinizdən əminsiniz?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/delete-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFormData(prev => ({
+          ...prev,
+          images: prev.images.filter(img => img !== imageUrl),
+          thumbnailImage: prev.thumbnailImage === imageUrl ? prev.images.find(img => img !== imageUrl) || '' : prev.thumbnailImage,
+        }));
+      } else {
+        alert(`Şəkil silinmədi: ${data.error || 'Naməlum xəta'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      alert('Şəkil silinmədi');
+    }
+  };
+
   const handleLocationSelect = (lat: number, lng: number, address: string) => {
     setFormData(prev => ({
       ...prev,
@@ -392,7 +421,19 @@ export default function EditBoardPage() {
             {formData.images.length > 0 && (
               <div className="mt-2 grid grid-cols-4 gap-2">
                 {formData.images.map((img, idx) => (
-                  <img key={idx} src={img} alt={`Şəkil ${idx + 1}`} className="w-full h-24 object-cover rounded-lg" />
+                  <div key={idx} className="relative group">
+                    <img src={img} alt={`Şəkil ${idx + 1}`} className="w-full h-24 object-cover rounded-lg" />
+                    <button
+                      type="button"
+                      onClick={() => handleImageDelete(img)}
+                      className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
+                      title="Şəkli sil"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
                 ))}
               </div>
             )}

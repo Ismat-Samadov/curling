@@ -46,7 +46,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ],
       image: listing.thumbnailImage || '/og-image.jpg',
       url: `/boards/${listing.id}`,
-      type: 'product',
     });
   } catch (error) {
     console.error('Error generating metadata:', error);
