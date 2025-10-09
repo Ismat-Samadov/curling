@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
-import { verifyPassword, setAuthCookie } from '@/lib/auth';
+import { verifyPassword } from '@/lib/auth';
 import { eq } from 'drizzle-orm';
 
 export async function POST(request: NextRequest) {
@@ -39,16 +39,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Set auth cookie
-    await setAuthCookie(user[0].id);
-
-    return NextResponse.json({
+    // Create response with cookie
+    const response = NextResponse.json({
       user: {
         id: user[0].id,
         email: user[0].email,
         name: user[0].name,
       },
     });
+
+    // Set auth cookie on response
+    response.cookies.set('user_id', user[0].id.toString(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    });
+
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
