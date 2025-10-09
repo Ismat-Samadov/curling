@@ -158,7 +158,7 @@ export default function AdminPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="məs., Ana Yolda Premium Bilbord"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                 />
               </div>
 
@@ -170,7 +170,7 @@ export default function AdminPage() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Reklam lövhənizi, görünməsini, trafiki və xüsusi xüsusiyyətlərini təsvir edin..."
                   rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                 />
               </div>
 
@@ -183,7 +183,7 @@ export default function AdminPage() {
                     step="0.1"
                     value={formData.width || ''}
                     onChange={(e) => setFormData({ ...formData, width: parseFloat(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                   />
                 </div>
                 <div>
@@ -194,7 +194,7 @@ export default function AdminPage() {
                     step="0.1"
                     value={formData.height || ''}
                     onChange={(e) => setFormData({ ...formData, height: parseFloat(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                   />
                 </div>
               </div>
@@ -205,7 +205,7 @@ export default function AdminPage() {
                   required
                   value={formData.boardType}
                   onChange={(e) => setFormData({ ...formData, boardType: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                 >
                   <option value="billboard">Bilbord</option>
                   <option value="digital">Rəqəmsal Ekran</option>
@@ -238,7 +238,7 @@ export default function AdminPage() {
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                   placeholder="məs., Bakı"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                 />
               </div>
 
@@ -250,7 +250,7 @@ export default function AdminPage() {
                   value={formData.country}
                   onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                   placeholder="məs., Azərbaycan"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                 />
               </div>
 
@@ -266,7 +266,7 @@ export default function AdminPage() {
                   multiple
                   accept="image/*"
                   onChange={handleImageUpload}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                 />
                 {uploading && <p className="text-sm text-gray-500 mt-2">Şəkillər yüklənir...</p>}
                 {formData.images.length > 0 && (
@@ -312,7 +312,7 @@ export default function AdminPage() {
                     step="0.01"
                     value={formData.pricePerDay || ''}
                     onChange={(e) => setFormData({ ...formData, pricePerDay: parseFloat(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                   />
                 </div>
                 <div>
@@ -323,7 +323,7 @@ export default function AdminPage() {
                     step="0.01"
                     value={formData.pricePerWeek || ''}
                     onChange={(e) => setFormData({ ...formData, pricePerWeek: parseFloat(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                   />
                 </div>
                 <div>
@@ -334,7 +334,7 @@ export default function AdminPage() {
                     step="0.01"
                     value={formData.pricePerMonth || ''}
                     onChange={(e) => setFormData({ ...formData, pricePerMonth: parseFloat(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                   />
                 </div>
               </div>
@@ -346,7 +346,7 @@ export default function AdminPage() {
                   required
                   value={formData.ownerName}
                   onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                 />
               </div>
 
@@ -357,7 +357,7 @@ export default function AdminPage() {
                   required
                   value={formData.ownerEmail}
                   onChange={(e) => setFormData({ ...formData, ownerEmail: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                 />
               </div>
 
@@ -367,7 +367,7 @@ export default function AdminPage() {
                   type="tel"
                   value={formData.ownerPhone}
                   onChange={(e) => setFormData({ ...formData, ownerPhone: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                 />
               </div>
 
