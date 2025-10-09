@@ -69,6 +69,7 @@ export default function AdminPanelPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [userFilter, setUserFilter] = useState<'all' | 'admin' | 'user'>('all');
   const [boardFilter, setBoardFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [selectedBoards, setSelectedBoards] = useState<number[]>([]);
 
   useEffect(() => {
     checkAuth();
@@ -232,6 +233,63 @@ export default function AdminPanelPage() {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     router.push('/');
+  };
+
+  const handleBulkAction = async (action: string) => {
+    if (selectedBoards.length === 0) {
+      alert('Heç bir lövhə seçilməyib');
+      return;
+    }
+
+    const actionNames: Record<string, string> = {
+      activate: 'aktivləşdirmək',
+      deactivate: 'deaktivləşdirmək',
+      delete: 'silmək',
+    };
+
+    if (!confirm(`Seçilmiş ${selectedBoards.length} lövhəni ${actionNames[action] || action} istədiyinizə əminsiniz?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/admin/boards/bulk-actions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ boardIds: selectedBoards, action }),
+      });
+
+      if (response.ok) {
+        setSelectedBoards([]);
+        fetchBoards();
+        fetchStats();
+        alert('Əməliyyat uğurla yerinə yetirildi');
+      } else {
+        alert('Xəta baş verdi');
+      }
+    } catch (error) {
+      console.error('Error performing bulk action:', error);
+      alert('Xəta baş verdi');
+    }
+  };
+
+  const handleExport = (type: string) => {
+    window.location.href = `/api/admin/export?type=${type}`;
+  };
+
+  const toggleBoardSelection = (boardId: number) => {
+    setSelectedBoards(prev =>
+      prev.includes(boardId)
+        ? prev.filter(id => id !== boardId)
+        : [...prev, boardId]
+    );
+  };
+
+  const selectAllBoards = () => {
+    if (selectedBoards.length === filteredBoards.length) {
+      setSelectedBoards([]);
+    } else {
+      setSelectedBoards(filteredBoards.map(b => b.id));
+    }
   };
 
   // Filter users
@@ -673,6 +731,12 @@ export default function AdminPanelPage() {
                   >
                     İstifadəçi
                   </button>
+                  <button
+                    onClick={() => handleExport('users')}
+                    className="px-4 py-3 rounded-xl font-semibold bg-green-600 text-white hover:bg-green-700 transition-all"
+                  >
+                    📥 İxrac Et
+                  </button>
                 </div>
               </div>
 
@@ -795,7 +859,59 @@ export default function AdminPanelPage() {
                   >
                     Qeyri-aktiv
                   </button>
+                  <button
+                    onClick={() => handleExport('boards')}
+                    className="px-4 py-3 rounded-xl font-semibold bg-green-600 text-white hover:bg-green-700 transition-all"
+                  >
+                    📥 İxrac Et
+                  </button>
                 </div>
+              </div>
+
+              {/* Bulk Actions */}
+              {selectedBoards.length > 0 && (
+                <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p className="text-sm font-semibold text-gray-700">
+                      {selectedBoards.length} lövhə seçildi
+                    </p>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleBulkAction('activate')}
+                        className="px-4 py-2 rounded-lg font-semibold bg-green-600 text-white hover:bg-green-700 transition-all text-sm"
+                      >
+                        ✓ Aktiv Et
+                      </button>
+                      <button
+                        onClick={() => handleBulkAction('deactivate')}
+                        className="px-4 py-2 rounded-lg font-semibold bg-orange-600 text-white hover:bg-orange-700 transition-all text-sm"
+                      >
+                        ⏸ Deaktiv Et
+                      </button>
+                      <button
+                        onClick={() => handleBulkAction('delete')}
+                        className="px-4 py-2 rounded-lg font-semibold bg-red-600 text-white hover:bg-red-700 transition-all text-sm"
+                      >
+                        🗑️ Sil
+                      </button>
+                      <button
+                        onClick={() => setSelectedBoards([])}
+                        className="px-4 py-2 rounded-lg font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all text-sm"
+                      >
+                        ✕ Seçimi Ləğv Et
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="mb-4">
+                <button
+                  onClick={selectAllBoards}
+                  className="px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all text-sm"
+                >
+                  {selectedBoards.length === filteredBoards.length ? '☑ Seçimi Ləğv Et' : '☐ Hamısını Seç'}
+                </button>
               </div>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -809,6 +925,14 @@ export default function AdminPanelPage() {
                         className="object-cover"
                         unoptimized={!board.thumbnailImage}
                       />
+                      <div className="absolute top-3 left-3">
+                        <input
+                          type="checkbox"
+                          checked={selectedBoards.includes(board.id)}
+                          onChange={() => toggleBoardSelection(board.id)}
+                          className="w-5 h-5 rounded cursor-pointer"
+                        />
+                      </div>
                       <div className="absolute top-3 right-3">
                         <span className={`px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md ${
                           board.isActive ? 'bg-green-500/90 text-white' : 'bg-red-500/90 text-white'
