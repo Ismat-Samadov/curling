@@ -269,7 +269,7 @@ export default function AdminPage() {
             <div className="flex justify-between items-center">
               <Link href="/">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent cursor-pointer">
-                  banner.az
+                  reklamyeri.az
                 </h1>
               </Link>
 

@@ -45,7 +45,7 @@ export default function LoginPage() {
         <div className="text-center mb-6 sm:mb-8">
           <Link href="/">
             <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent cursor-pointer mb-2">
-              banner.az
+              reklamyeri.az
             </h1>
           </Link>
           <p className="text-gray-600 text-base sm:text-lg">Hesabınıza daxil olun</p>

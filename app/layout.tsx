@@ -7,9 +7,9 @@ const inter = Inter({ subsets: ["latin", "latin-ext"] });
 
 export const metadata: Metadata = {
   ...genMeta({}),
-  metadataBase: new URL('https://banner.az'),
-  applicationName: 'banner.az',
-  authors: [{ name: 'banner.az Team' }],
+  metadataBase: new URL('https://reklamyeri.az'),
+  applicationName: 'reklamyeri.az',
+  authors: [{ name: 'reklamyeri.az Team' }],
   generator: 'Next.js',
   referrer: 'origin-when-cross-origin',
   formatDetection: {

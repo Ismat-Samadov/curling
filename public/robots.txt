@@ -1,4 +1,4 @@
-# banner.az - Robots.txt
+# reklamyeri.az - Robots.txt
 User-agent: *
 Allow: /
 Allow: /boards
@@ -19,7 +19,7 @@ Disallow: /*?*sort=
 Disallow: /*?*filter=
 
 # Sitemap location
-Sitemap: https://banner.az/sitemap.xml
+Sitemap: https://reklamyeri.az/sitemap.xml
 
 # Crawl-delay for specific bots
 User-agent: Googlebot

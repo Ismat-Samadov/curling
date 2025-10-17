@@ -1,9 +1,9 @@
-// SEO Configuration for banner.az
+// SEO Configuration for reklamyeri.az
 export const siteConfig = {
-  name: 'banner.az',
-  title: 'Reklam Lövhələri - Billboard Kirayə | banner.az',
+  name: 'reklamyeri.az',
+  title: 'Reklam Lövhələri - Billboard Kirayə | reklamyeri.az',
   description: 'Azərbaycanda reklam lövhələri və billboard kirayəsi. Bakı, Gəncə, Sumqayıt və digər şəhərlərdə ən yaxşı yerləşdirmə. Digital ekran, bilbord və poster reklamları.',
-  url: 'https://banner.az',
+  url: 'https://reklamyeri.az',
   ogImage: '/og-image.jpg',
   keywords: [
     'reklam lövhəsi',
@@ -48,7 +48,7 @@ export function generateMetadata(params: {
     noindex = false,
   } = params;
 
-  const fullTitle = title === siteConfig.title ? title : `${title} | banner.az`;
+  const fullTitle = title === siteConfig.title ? title : `${title} | reklamyeri.az`;
 
   return {
     title: fullTitle,
@@ -76,8 +76,8 @@ export function generateMetadata(params: {
       title: fullTitle,
       description,
       images: [image.startsWith('http') ? image : `${siteConfig.url}${image}`],
-      creator: '@banneraz',
-      site: '@banneraz',
+      creator: '@reklamyeriaz',
+      site: '@reklamyeriaz',
     },
     alternates: {
       canonical: url,
@@ -93,7 +93,7 @@ export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'banner.az',
+    name: 'reklamyeri.az',
     url: siteConfig.url,
     logo: `${siteConfig.url}/logo.png`,
     description: siteConfig.description,
@@ -109,9 +109,9 @@ export function generateOrganizationSchema() {
       availableLanguage: ['az', 'en', 'ru'],
     },
     sameAs: [
-      'https://facebook.com/banneraz',
-      'https://instagram.com/banneraz',
-      'https://linkedin.com/company/banneraz',
+      'https://facebook.com/reklamyeriaz',
+      'https://instagram.com/reklamyeriaz',
+      'https://linkedin.com/company/reklamyeriaz',
     ],
   };
 }
@@ -174,7 +174,7 @@ export function generateListingSchema(listing: {
     },
     brand: {
       '@type': 'Brand',
-      name: 'banner.az',
+      name: 'reklamyeri.az',
     },
     category: listing.boardType,
     additionalProperty: [

@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import { AZERBAIJAN_CITIES } from '@/lib/regions';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://banner.az';
+  const baseUrl = 'https://reklamyeri.az';
 
   // Static pages
   const staticPages = [

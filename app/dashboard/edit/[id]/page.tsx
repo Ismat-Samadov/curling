@@ -282,7 +282,7 @@ export default function EditBoardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <Link href="/">
-              <h1 className="text-2xl font-bold text-indigo-600 cursor-pointer">banner.az</h1>
+              <h1 className="text-2xl font-bold text-indigo-600 cursor-pointer">reklamyeri.az</h1>
             </Link>
             <div className="flex items-center gap-4">
               <Link href="/boards" className="text-gray-700 hover:text-indigo-600">
