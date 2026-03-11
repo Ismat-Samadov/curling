@@ -2,6 +2,24 @@
 
 A modern platform for monetizing physical advertising boards. Connect board owners with advertisers looking for prime physical advertising locations.
 
+## Screenshots
+
+### Landing Page
+![Landing Page](screens/landing%20page.png)
+
+### Login Page
+![Login Page](screens/login%20page.png)
+
+### New Advertisement
+![New Advertisement](screens/new%20advertisement.png)
+![New Advertisement 2](screens/new%20advertisement%202.png)
+
+### Profile Page
+![Profile Page](screens/profile%20page.png)
+
+### Admin Panel
+![Admin Panel](screens/admin%20panel.png)
+
 ## Features
 
 ### For Users
