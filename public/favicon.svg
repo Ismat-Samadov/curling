@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="#1e3a5f"/>
+
+  <!-- Ice rings -->
+  <circle cx="32" cy="24" r="16" fill="#dc2626" stroke="white" stroke-width="1"/>
+  <circle cx="32" cy="24" r="12" fill="white" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+  <circle cx="32" cy="24" r="8" fill="#dc2626" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+  <circle cx="32" cy="24" r="4" fill="white"/>
+
+  <!-- Stone body -->
+  <circle cx="32" cy="44" r="9" fill="#6b7280"/>
+  <!-- Stone colour band -->
+  <circle cx="32" cy="44" r="6.5" fill="#22d3ee"/>
+  <!-- Stone dark core -->
+  <circle cx="32" cy="44" r="3.5" fill="#0891b2"/>
+  <!-- Stone handle -->
+  <rect x="30" y="36" width="4" height="3" rx="1.5" fill="#9ca3af"/>
+  <!-- Stone glint -->
+  <circle cx="29.5" cy="41.5" r="1.5" fill="rgba(255,255,255,0.6)"/>
+</svg>
