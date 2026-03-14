@@ -14,11 +14,9 @@ import type { Stone, Difficulty, Vec2 } from '@/types/game';
 import { distanceBetween } from './physics';
 import {
   HOUSE_CENTER,
-  STONE_RADIUS,
   HACK_Y,
   SHEET_WIDTH,
   MAX_SPEED,
-  CURL_FACTOR,
   FRICTION,
 } from './constants';
 import { getStonesInHouse } from './scoring';
@@ -81,11 +79,10 @@ function buildShotAt(
   const dy = target.y - hackPos.y; // negative (target is above hack)
   const idealAngle = Math.atan2(dx, -dy); // 0 = straight up
 
-  // Ideal power: use energy equation v² = 2·a·d approximation
-  // We want the stone to stop at the target distance
+  // Ideal power: kinematic equation  v² = 2 · FRICTION · dist
+  // (constant decel stops stone exactly at target)
   const dist = distanceBetween(hackPos, target);
-  // v² ≈ 2 * FRICTION * MAX_SPEED * dist  →  power ≈ sqrt(2*F*d) / MAX_SPEED
-  const rawSpeed = Math.sqrt(2 * FRICTION * MAX_SPEED * dist + 0.01);
+  const rawSpeed = Math.sqrt(2 * FRICTION * dist);
   const idealPower = Math.min(1, rawSpeed / MAX_SPEED);
 
   // Add difficulty noise

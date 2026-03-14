@@ -21,14 +21,21 @@ export const HACK_Y = SHEET_HEIGHT - 80;
 export const STONE_RADIUS = 20;
 
 // ─── Physics ────────────────────────────────────────────────────────────────
-/** Friction deceleration in px/frame² */
-export const FRICTION = 0.012;
+/**
+ * Constant deceleration per frame (px/frame).
+ * Calibrated so 70% power lands near house centre (640 px from hack):
+ *   distance = v² / (2 * FRICTION)  →  FRICTION = (0.7*MAX_SPEED)² / (2*640) ≈ 0.185
+ */
+export const FRICTION = 0.185;
 /** Maximum initial speed when power = 1 */
 export const MAX_SPEED = 22;
 /** Minimum speed to consider stone stopped */
-export const MIN_SPEED = 0.08;
-/** Curl force scale — how much the stone curves per frame */
-export const CURL_FACTOR = 0.0015;
+export const MIN_SPEED = 0.15;
+/**
+ * Curl force scale.
+ * Total curl ≈ 0.4 * CURL_FACTOR * v² / (2*FRICTION) ≈ 26 px at 70% power.
+ */
+export const CURL_FACTOR = 0.1;
 
 // ─── Game rules ─────────────────────────────────────────────────────────────
 export const TOTAL_ENDS = 8;

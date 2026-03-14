@@ -153,11 +153,9 @@ export default function GameOrchestrator() {
             {/* Phase indicator */}
             <PhaseIndicator state={state} />
 
-            {/* Canvas wrapper — scales to fit viewport height */}
-            <div
-              className="w-full relative"
-              style={{ maxHeight: 'min(70vh, 900px)', aspectRatio: '480/900' }}
-            >
+            {/* Canvas wrapper — fixed canvas coordinates, CSS scales it down */}
+            <div className="overflow-hidden rounded-xl"
+              style={{ maxHeight: 'calc(100dvh - 160px)', aspectRatio: '480/900', width: '100%', maxWidth: '360px' }}>
               <CurlingCanvas gameState={state} />
             </div>
           </div>

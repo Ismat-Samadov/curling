@@ -40,32 +40,35 @@ function moveStone(stone: Stone): Stone {
   const speed = magnitude(stone.velocity);
 
   if (speed < MIN_SPEED) {
-    // Stone has come to rest — check if it's past the hog line
-    const active = stone.position.y <= HOG_LINE_Y;
-    return { ...stone, velocity: { x: 0, y: 0 }, angularVelocity: 0, active };
+    // Stone has come to rest — inactive if it never crossed the hog line
+    const passedHog = stone.position.y <= HOG_LINE_Y;
+    return { ...stone, velocity: { x: 0, y: 0 }, angularVelocity: 0, active: passedHog };
   }
 
-  // Apply curl — a small lateral force proportional to speed and angular velocity
+  // Apply curl — lateral force perpendicular to motion, proportional to rotation
   const curlX = stone.angularVelocity * speed * CURL_FACTOR;
 
-  // Apply friction (opposing velocity direction)
-  const frictionFactor = Math.max(0, 1 - FRICTION / speed);
+  // Constant deceleration (Coulomb/ice friction): reduce speed by FRICTION each frame.
+  // frictionFactor = (speed - FRICTION) / speed  →  new_speed = speed - FRICTION
+  const newSpeed = Math.max(0, speed - FRICTION);
+  const frictionFactor = newSpeed / speed;
+
   const newVx = stone.velocity.x * frictionFactor + curlX;
   const newVy = stone.velocity.y * frictionFactor;
 
-  // Decay angular velocity (curling slows as stone slows)
-  const newAngular = stone.angularVelocity * 0.999;
+  // Angular velocity decays slowly with the stone
+  const newAngular = stone.angularVelocity * (newSpeed / (newSpeed + 0.001));
 
   const newPos = {
     x: stone.position.x + newVx,
     y: stone.position.y + newVy,
   };
 
-  // Deactivate if stone leaves sheet laterally
+  // Remove stone if it leaves the sheet boundaries
   const outOfBounds =
     newPos.x < -STONE_RADIUS ||
     newPos.x > SHEET_WIDTH + STONE_RADIUS ||
-    newPos.y < -STONE_RADIUS; // went past the back board
+    newPos.y < -STONE_RADIUS; // went past the back board (top of canvas)
 
   return {
     ...stone,
@@ -153,8 +156,12 @@ export function distanceBetween(a: Vec2, b: Vec2): number {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-/** Returns true when all stones have stopped moving */
+/**
+ * Returns true when all stones have stopped moving.
+ * An empty array returns false (nothing to simulate yet — don't trigger stop prematurely).
+ */
 export function allStopped(stones: Stone[]): boolean {
+  if (stones.length === 0) return false;
   return stones.every((s) => {
     if (!s.active) return true;
     return magnitude(s.velocity) < MIN_SPEED;

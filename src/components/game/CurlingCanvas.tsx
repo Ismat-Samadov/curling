@@ -213,7 +213,7 @@ export default function CurlingCanvas({ gameState }: Props) {
       width={SHEET_WIDTH}
       height={SHEET_HEIGHT}
       className="rounded-xl shadow-2xl"
-      style={{ maxHeight: '100%', maxWidth: '100%' }}
+      style={{ width: '100%', height: '100%', display: 'block' }}
     />
   );
 }
